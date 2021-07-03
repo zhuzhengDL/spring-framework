@@ -42,9 +42,33 @@ class AntPathMatcherTests {
 
 	private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
+	protected String determineRootDir(String location) {
+		// 找到冒号的后一位
+		int prefixEnd = location.indexOf(':') + 1;
+		// 根目录结束位置
+		int rootDirEnd = location.length();
+		// 在从冒号开始到最后的字符串中，循环判断是否包含通配符，如果包含，则截断最后一个由”/”分割的部分
+		// 例如：在我们路径中，就是最后的application-context.xml这一段。再循环判断剩下的部分，直到剩下的路径中都不包含通配符。
+		while (rootDirEnd > prefixEnd && pathMatcher.isPattern(location.substring(prefixEnd, rootDirEnd))) {
+			rootDirEnd = location.lastIndexOf('/', rootDirEnd - 2) + 1;
+		}
+		if (rootDirEnd == 0) {
+			rootDirEnd = prefixEnd;
+		}
+		return location.substring(0, rootDirEnd);
+	}
+	@Test
+	void testetermineRootDir() {
+		System.out.println(determineRootDir("classpath:/web-inf-*/*.xml"));
+		System.out.println(determineRootDir("/web-inf/*.xml"));
+
+	}
+
 
 	@Test
 	void match() {
+
+
 		// test exact matching
 		assertThat(pathMatcher.match("test", "test")).isTrue();
 		assertThat(pathMatcher.match("/test", "/test")).isTrue();
