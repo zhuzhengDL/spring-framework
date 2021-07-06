@@ -11,8 +11,24 @@
 							exception-handler="testExceptionHandler"/>
 
 	<task:executor id="testExecutor"/>
+<!--	<bean id="testExceptionHandler"
+		  class="org.springframework.aop.interceptor.SimpleAsyncUncaughtExceptionHandler"/>-->
 
 	<bean id="testExceptionHandler"
-		  class="org.springframework.aop.interceptor.SimpleAsyncUncaughtExceptionHandler"/>
+		  class="org.springframework.aop.interceptor.SimpleAsyncUncaughtExceptionHandler" parent="testExecutor"
+		  scope="singleton">
+		<description>
+			my description
+		</description>
+		<lookup-method bean="conversionService"/>
+		<replaced-method>
+			<arg-type></arg-type>
+		</replaced-method>
+		<meta key="key" value="value"/>
+		<constructor-arg>
+			<bean ></bean>
+		</constructor-arg>
+		<qualifier value="dd"></qualifier>
 
+	</bean>
 </beans>

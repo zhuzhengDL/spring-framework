@@ -16,12 +16,7 @@
 
 package org.springframework.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -39,6 +34,22 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
  * @author Sam Brannen
  */
 class AntPathMatcherTests {
+
+	public static final String MULTI_VALUE_ATTRIBUTE_DELIMITERS = ",; ";
+	@Test
+	public void test() {
+		String nameAttr = "made,in;china";
+		String flag = MULTI_VALUE_ATTRIBUTE_DELIMITERS;
+		String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, MULTI_VALUE_ATTRIBUTE_DELIMITERS);
+		System.out.println(Arrays.toString(nameArr));
+	}
+	@Test
+	public void test2() {
+		String nameAttr = "made,in,china test;condi";
+		String flag = MULTI_VALUE_ATTRIBUTE_DELIMITERS;
+		String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, MULTI_VALUE_ATTRIBUTE_DELIMITERS);
+		System.out.println(Arrays.toString(nameArr));
+	}
 
 	private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
