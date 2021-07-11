@@ -65,6 +65,19 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 
 
 	/**
+	 * 为给定的 bean 工厂创建一个新的 AbstractBeanDefinitionReader。
+	 * * <p>如果传入的bean factory不只实现了BeanDefinitionRegistry
+	 * * 接口也是 ResourceLoader 接口，它将作为默认使用
+	 * * ResourceLoader 也是如此。这通常是这种情况
+	 * * {@link org.springframework.context.ApplicationContext} 实现。
+	 * * <p>如果给定一个普通的 BeanDefinitionRegistry，默认的 ResourceLoader 将是一个
+	 * * {@link org.springframework.core.io.support.PathMatchingResourcePatternResolver}。
+	 * * <p>如果传入的 bean factory 也实现了 {@link EnvironmentCapable}
+	 * * 此读者将使用环境。否则，读取器将初始化并
+	 * * 使用 {@link StandardEnvironment}。所有 ApplicationContext 实现都是
+	 * * EnvironmentCapable，而普通的 BeanFactory 实现则不是。
+	 *
+	 *
 	 * Create a new AbstractBeanDefinitionReader for the given bean factory.
 	 * <p>If the passed-in bean factory does not only implement the BeanDefinitionRegistry
 	 * interface but also the ResourceLoader interface, it will be used as default
@@ -86,14 +99,19 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 		this.registry = registry;
 
 		// Determine ResourceLoader to use.
+		//如果传入的bean factory不只实现了BeanDefinitionRegistry
+		// 接口也是 ResourceLoader 接口，它将作为默认使用ResourceLoader这通常是这种情况
+		// {@link org.springframework.context.ApplicationContext} 实现。
 		if (this.registry instanceof ResourceLoader) {
 			this.resourceLoader = (ResourceLoader) this.registry;
 		}
 		else {
+			//如果给定一个普通的 BeanDefinitionRegistry，默认的 ResourceLoader 将是一个PathMatchingResourcePatternResolver
 			this.resourceLoader = new PathMatchingResourcePatternResolver();
 		}
 
 		// Inherit Environment if possible
+		// 如果可能，继承环境
 		if (this.registry instanceof EnvironmentCapable) {
 			this.environment = ((EnvironmentCapable) this.registry).getEnvironment();
 		}

@@ -15,20 +15,44 @@
 		  class="org.springframework.aop.interceptor.SimpleAsyncUncaughtExceptionHandler"/>-->
 
 	<bean id="testExceptionHandler"
-		  class="org.springframework.aop.interceptor.SimpleAsyncUncaughtExceptionHandler" parent="testExecutor"
+		  class="org.springframework.aop.interceptor.SimpleAsyncUncaughtExceptionHandler" parent="testExecutor" factory-bean=""
+		  factory-method="a"
+		  primary="b"
+		  depends-on="c"
+		  autowire-candidate="true"
+		  lazy-init="default"
+		  init-method="d"
+		  destroy-method="e"
+		  abstract="true"
+		  autowire="byType"
 		  scope="singleton">
 		<description>
 			my description
 		</description>
-		<lookup-method bean="conversionService"/>
-		<replaced-method>
-			<arg-type></arg-type>
-		</replaced-method>
+		<lookup-method name="targetMethod" bean="conversionService" />
+		<replaced-method name="replaceMethod" replacer="beanXxx"/>
 		<meta key="key" value="value"/>
-		<constructor-arg>
-			<bean ></bean>
+		<meta key="key2" value="value2"/>
+		<constructor-arg name="param1" value="value2" type="double">
 		</constructor-arg>
-		<qualifier value="dd"></qualifier>
-
+		<constructor-arg index="1" value="value2"/>
+		<constructor-arg name="param2" >
+			<ref bean="cc"></ref>
+			<!--<ref parent=""></ref>-->
+		</constructor-arg>
+		<constructor-arg name="param3" >
+		<!--	<array ></array>-->
+<!--			<set></set>-->
+			<list></list>
+			<!--<null></null>-->
+		</constructor-arg>
+		<qualifier value="dd" type="">
+			<attribute key="" value=""/>
+		</qualifier>
+		<property name="">
+		   <list> </list>
+			<!--<value> </value>-->
+		</property>
+        <property name="cc" value="ss"/>
 	</bean>
 </beans>

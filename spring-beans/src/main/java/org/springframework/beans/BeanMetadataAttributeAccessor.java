@@ -49,7 +49,7 @@ public class BeanMetadataAttributeAccessor extends AttributeAccessorSupport impl
 	}
 
 
-	/**
+	/** 将给定的 BeanMetadataAttribute 添加到此访问器的属性集。
 	 * Add the given BeanMetadataAttribute to this accessor's set of attributes.
 	 * @param attribute the BeanMetadataAttribute object to register
 	 */

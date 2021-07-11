@@ -84,7 +84,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	private BeanDefinitionParserDelegate delegate;
 
 
-	/**
+	/** 这个实现根据“spring-beans”XSD解析bean定义
 	 * This implementation parses bean definitions according to the "spring-beans" XSD
 	 * (or DTD, historically).
 	 * <p>Opens a DOM Document; then initializes the default settings

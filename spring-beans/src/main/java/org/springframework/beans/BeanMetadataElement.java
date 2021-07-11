@@ -27,7 +27,7 @@ import org.springframework.lang.Nullable;
  */
 public interface BeanMetadataElement {
 
-	/**
+	/** 返回此元数据元素的配置源 {@code Object}
 	 * Return the configuration source {@code Object} for this metadata element
 	 * (may be {@code null}).
 	 */

@@ -23,6 +23,9 @@ import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 
 /**
+ * BeanDefinition 描述了一个 bean 实例，它具有属性值，
+ *   构造函数参数值，以及具体实现提供的更多信息。
+ *
  * A BeanDefinition describes a bean instance, which has property values,
  * constructor argument values, and further information supplied by
  * concrete implementations.
@@ -40,7 +43,7 @@ import org.springframework.lang.Nullable;
  */
 public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 
-	/**
+	/** 定义单例 scope的类型值
 	 * Scope identifier for the standard singleton scope: {@value}.
 	 * <p>Note that extended bean factories might support further scopes.
 	 * @see #setScope
@@ -48,7 +51,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 */
 	String SCOPE_SINGLETON = ConfigurableBeanFactory.SCOPE_SINGLETON;
 
-	/**
+	/** 定义原型 scope的类型值
 	 * Scope identifier for the standard prototype scope: {@value}.
 	 * <p>Note that extended bean factories might support further scopes.
 	 * @see #setScope
@@ -135,20 +138,22 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	@Nullable
 	String getScope();
 
-	/**
+	/** 设置这个 bean 是否应该被延迟初始化。
 	 * Set whether this bean should be lazily initialized.
 	 * <p>If {@code false}, the bean will get instantiated on startup by bean
 	 * factories that perform eager initialization of singletons.
 	 */
 	void setLazyInit(boolean lazyInit);
 
-	/**
+	/**返回这个 bean 是否应该被延迟初始化，即不
+	 * 在启动时急切地实例化。仅适用于单例 bean。
 	 * Return whether this bean should be lazily initialized, i.e. not
 	 * eagerly instantiated on startup. Only applicable to a singleton bean.
 	 */
 	boolean isLazyInit();
 
-	/**
+	/** 设置此 bean 所依赖的 bean 的名称被初始化。
+	    bean 工厂将保证这些 bean 首先被初始化。
 	 * Set the names of the beans that this bean depends on being initialized.
 	 * The bean factory will guarantee that these beans get initialized first.
 	 */
@@ -160,7 +165,12 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	@Nullable
 	String[] getDependsOn();
 
-	/**
+	/** 设置此 bean 是否是自动装配到其他 bean 的候选者。
+	    <p>请注意，此标志旨在仅影响基于类型的自动装配。
+	 它不会影响按名称的显式引用，即使它也会被解析
+	 如果指定的 bean 未标记为自动装配候选者。作为结果，
+	 如果名称匹配，按名称自动装配仍然会注入一个 bean。
+
 	 * Set whether this bean is a candidate for getting autowired into some other bean.
 	 * <p>Note that this flag is designed to only affect type-based autowiring.
 	 * It does not affect explicit references by name, which will get resolved even
@@ -175,6 +185,10 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	boolean isAutowireCandidate();
 
 	/**
+	 * 设置此 bean 是否是主要的自动装配候选者。
+	 * <p>如果这个值对于多个 bean 中的一个 bean 正好是 {@code true}
+	 * 匹配的候选人，它将作为决胜者 被加入到容器。
+	 *
 	 * Set whether this bean is a primary autowire candidate.
 	 * <p>If this value is {@code true} for exactly one bean among multiple
 	 * matching candidates, it will serve as a tie-breaker.
@@ -186,7 +200,9 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 */
 	boolean isPrimary();
 
-	/**
+	/**指定要使用的工厂 bean（如果有）。
+	   指定工厂的 bean 的名称。
+
 	 * Specify the factory bean to use, if any.
 	 * This the name of the bean to call the specified factory method on.
 	 * @see #setFactoryMethodName
@@ -200,6 +216,11 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	String getFactoryBeanName();
 
 	/**
+	 * 指定工厂方法（如果有）。这个方法将被调用
+	 * 构造函数参数，如果没有指定则不带参数。
+	 * 该方法将在指定的工厂 bean 上调用，如果有的话，
+	 * 或以其他方式作为本地 bean 类的静态方法。
+	 *
 	 * Specify a factory method, if any. This method will be invoked with
 	 * constructor arguments, or with no arguments if none are specified.
 	 * The method will be invoked on the specified factory bean, if any,

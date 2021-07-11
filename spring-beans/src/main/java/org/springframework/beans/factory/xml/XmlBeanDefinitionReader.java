@@ -147,7 +147,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			};
 
 
-	/**
+	/** 为给定的 bean 工厂创建新的 XmlBeanDefinitionReader。
 	 * Create new XmlBeanDefinitionReader for the given bean factory.
 	 * @param registry the BeanFactory to load bean definitions into,
 	 * in the form of a BeanDefinitionRegistry
@@ -322,7 +322,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		return loadBeanDefinitions(new EncodedResource(resource));
 	}
 
-	/**
+	/** 从指定的 XML 文件加载 bean 定义。
 	 * Load bean definitions from the specified XML file.
 	 * @param encodedResource the resource descriptor for the XML file,
 	 * allowing to specify an encoding to use for parsing the file
@@ -563,7 +563,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 				this.sourceExtractor, this, getNamespaceHandlerResolver());
 	}
 
-	/**
+	/** 如果之前没有设置，则懒惰地创建一个默认的 NamespaceHandlerResolver。
 	 * Lazily create a default NamespaceHandlerResolver, if not set before.
 	 * @see #createDefaultNamespaceHandlerResolver()
 	 */
@@ -574,7 +574,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		return this.namespaceHandlerResolver;
 	}
 
-	/**
+	/** 如果未指定，则创建使用的 {@link NamespaceHandlerResolver} 的默认实现。
 	 * Create the default implementation of {@link NamespaceHandlerResolver} used if none is specified.
 	 * <p>The default implementation returns an instance of {@link DefaultNamespaceHandlerResolver}.
 	 * @see DefaultNamespaceHandlerResolver#DefaultNamespaceHandlerResolver(ClassLoader)
