@@ -339,7 +339,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 		return false;
 	}
 
-	/**
+	/** 确定给定的依赖项是否声明了值注释。
 	 * Determine whether the given dependency declares a value annotation.
 	 * @see Value
 	 */
@@ -356,7 +356,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 		return value;
 	}
 
-	/**
+	/**  Determine a suggested value from any of the given candidate annotations.
 	 * Determine a suggested value from any of the given candidate annotations.
 	 */
 	@Nullable
@@ -371,7 +371,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 		return null;
 	}
 
-	/**
+	/** 从给定的注释中提取值属性。
 	 * Extract the value attribute from the given annotation.
 	 * @since 4.3
 	 */

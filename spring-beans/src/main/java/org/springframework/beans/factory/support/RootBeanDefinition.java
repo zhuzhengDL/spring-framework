@@ -60,7 +60,9 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	@Nullable
 	private AnnotatedElement qualifiedElement;
 
-	/** Determines if the definition needs to be re-merged. */
+	/** Determines if the definition needs to be re-merged.
+	 * 确定是否需要重新合并定义。
+	 * */
 	volatile boolean stale;
 
 	boolean allowCaching = true;
@@ -93,18 +95,24 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/** Common lock for the four constructor fields below. */
 	final Object constructorArgumentLock = new Object();
 
-	/** Package-visible field for caching the resolved constructor or factory method. */
+	/** Package-visible field for caching the resolved constructor or factory method.
+	 * 用于缓存解析的构造函数或工厂方法的包可见字段。
+	 * */
 	@Nullable
 	Executable resolvedConstructorOrFactoryMethod;
 
 	/** Package-visible field that marks the constructor arguments as resolved. */
 	boolean constructorArgumentsResolved = false;
 
-	/** Package-visible field for caching fully resolved constructor arguments. */
+	/** Package-visible field for caching fully resolved constructor arguments.
+	 *  用于缓存完全解析的构造函数参数的包可见字段。
+	 * */
 	@Nullable
 	Object[] resolvedConstructorArguments;
 
-	/** Package-visible field for caching partly prepared constructor arguments. */
+	/** Package-visible field for caching partly prepared constructor arguments.
+	 *  用于缓存部分准备好的构造函数参数的包可见字段。
+	 * */
 	@Nullable
 	Object[] preparedConstructorArguments;
 
@@ -114,7 +122,9 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/** Package-visible field that indicates MergedBeanDefinitionPostProcessor having been applied. */
 	boolean postProcessed = false;
 
-	/** Package-visible field that indicates a before-instantiation post-processor having kicked in. */
+	/** Package-visible field that indicates a before-instantiation post-processor having kicked in.
+	 *  包可见字段，指示实例化前的后处理器已启动 默认false
+	 * */
 	@Nullable
 	volatile Boolean beforeInstantiationResolved;
 
@@ -179,6 +189,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 		super();
 		setBeanClass(beanClass);
 		setScope(scope);
+		// 设置 instanceSupplier 属性
 		setInstanceSupplier(instanceSupplier);
 	}
 
@@ -366,7 +377,9 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 		return super.getResolvableType();
 	}
 
-	/**
+	/**确定用于默认构造的首选构造函数（如果有）。
+	 如有必要，构造函数参数将被自动装配。
+
 	 * Determine preferred constructors to use for default construction, if any.
 	 * Constructor arguments will be autowired if necessary.
 	 * @return one or more preferred constructors, or {@code null} if none

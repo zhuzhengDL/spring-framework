@@ -40,7 +40,7 @@ import org.springframework.lang.Nullable;
  */
 public interface ObjectProvider<T> extends ObjectFactory<T>, Iterable<T> {
 
-	/**
+	/** 返回此工厂管理的对象的实例（可能是共享的或独立的）。
 	 * Return an instance (possibly shared or independent) of the object
 	 * managed by this factory.
 	 * <p>Allows for specifying explicit construction arguments, along the
@@ -52,7 +52,7 @@ public interface ObjectProvider<T> extends ObjectFactory<T>, Iterable<T> {
 	 */
 	T getObject(Object... args) throws BeansException;
 
-	/**
+	/**  返回此工厂管理的对象的实例（可能是共享的或独立的）。
 	 * Return an instance (possibly shared or independent) of the object
 	 * managed by this factory.
 	 * @return an instance of the bean, or {@code null} if not available

@@ -157,7 +157,7 @@ public class DependencyDescriptor extends InjectionPoint implements Serializable
 	}
 
 
-	/**
+	/** 返回是否需要此依赖项。 required=true?
 	 * Return whether this dependency is required.
 	 * <p>Optional semantics are derived from Java 8's {@link java.util.Optional},
 	 * any variant of a parameter-level {@code Nullable} annotation (such as from
@@ -257,7 +257,10 @@ public class DependencyDescriptor extends InjectionPoint implements Serializable
 		return null;
 	}
 
-	/**
+	/** 将指定的 bean 名称解析为给定工厂的 bean 实例，作为此依赖项的匹配算法的候选结果。
+	 *
+	 * 一般是依赖注入的时候用来创建依赖bean
+	 *
 	 * Resolve the specified bean name, as a candidate result of the matching
 	 * algorithm for this dependency, to a bean instance from the given factory.
 	 * <p>The default implementation calls {@link BeanFactory#getBean(String)}.
@@ -378,7 +381,7 @@ public class DependencyDescriptor extends InjectionPoint implements Serializable
 		return (this.field != null ? this.field.getName() : obtainMethodParameter().getParameterName());
 	}
 
-	/**
+	/** 确定包装参数/字段的声明（非通用）类型。
 	 * Determine the declared (non-generic) type of the wrapped parameter/field.
 	 * @return the declared type (never {@code null})
 	 */

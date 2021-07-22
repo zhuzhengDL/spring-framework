@@ -148,7 +148,9 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	@Nullable
 	private Boolean lazyInit;
-
+	/**
+	 * 注入模式
+	 */
 	private int autowireMode = AUTOWIRE_NO;
 
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
@@ -161,7 +163,9 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	private boolean primary = false;
 
 	private final Map<String, AutowireCandidateQualifier> qualifiers = new LinkedHashMap<>();
-
+	/**
+	 * 创建 Bean 的 Supplier 对象
+	 */
 	@Nullable
 	private Supplier<?> instanceSupplier;
 
@@ -600,6 +604,9 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	}
 
 	/**
+	 * 返回解析的自动装配代码，
+	 *  （将 AUTOWIRE_AUTODETECT 解析为 AUTOWIRE_CONSTRUCTOR 或 AUTOWIRE_BY_TYPE）。
+	 *
 	 * Return the resolved autowire code,
 	 * (resolving AUTOWIRE_AUTODETECT to AUTOWIRE_CONSTRUCTOR or AUTOWIRE_BY_TYPE).
 	 * @see #AUTOWIRE_AUTODETECT
@@ -607,7 +614,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * @see #AUTOWIRE_BY_TYPE
 	 */
 	public int getResolvedAutowireMode() {
-		if (this.autowireMode == AUTOWIRE_AUTODETECT) {
+		if (this.autowireMode == AUTOWIRE_AUTODETECT) {  // 自动检测模式，获得对应的检测模式
 			// Work out whether to apply setter autowiring or constructor autowiring.
 			// If it has a no-arg constructor it's deemed to be setter autowiring,
 			// otherwise we'll try constructor autowiring.
@@ -747,6 +754,12 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	}
 
 	/**
+	 * 指定用于创建 bean 实例的回调，
+	 * * 作为声明式指定工厂方法的替代方法。
+	 * * <p>如果设置了这样的回调，它将覆盖任何其他构造函数
+	 * * 或工厂方法元数据。然而，豆属性人口和
+	 * * 潜在的注释驱动注入仍将照常应用。
+	 *
 	 * Specify a callback for creating an instance of the bean,
 	 * as an alternative to a declaratively specified factory method.
 	 * <p>If such a callback is set, it will override any other constructor
@@ -801,7 +814,8 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 		this.lenientConstructorResolution = lenientConstructorResolution;
 	}
 
-	/**
+	/** 返回是否在宽松模式或严格模式下解析构造函数。
+	 *
 	 * Return whether to resolve constructors in lenient mode or in strict mode.
 	 */
 	public boolean isLenientConstructorResolution() {
@@ -1123,7 +1137,8 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 		}
 	}
 
-	/**
+	/** 验证并准备为此 bean 定义的方法覆盖。检查具有指定名称的方法是否存在。
+	 *
 	 * Validate and prepare the method overrides defined for this bean.
 	 * Checks for existence of a method with the specified name.
 	 * @throws BeanDefinitionValidationException in case of validation failure
@@ -1131,11 +1146,14 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	public void prepareMethodOverrides() throws BeanDefinitionValidationException {
 		// Check that lookup methods exist and determine their overloaded status.
 		if (hasMethodOverrides()) {
+			// 循环，执行 prepareMethodOverride
 			getMethodOverrides().getOverrides().forEach(this::prepareMethodOverride);
 		}
 	}
 
 	/**
+	 * 验证并准备给定的方法覆盖。检查具有指定名称的方法是否存在，如果没有找到，则将其标记为未重载。
+	 *
 	 * Validate and prepare the given method override.
 	 * Checks for existence of a method with the specified name,
 	 * marking it as not overloaded if none found.

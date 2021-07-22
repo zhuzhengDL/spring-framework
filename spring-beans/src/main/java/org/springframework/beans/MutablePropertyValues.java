@@ -32,6 +32,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
 /**
+ * {@link PropertyValues} 接口的默认实现。允许对属性进行简单操作，并提供构造函数以支持从 Map 进行深度复制和构造。
+ *
  * The default implementation of the {@link PropertyValues} interface.
  * Allows simple manipulation of properties, and provides constructors
  * to support deep copy and construction from a Map.
@@ -162,7 +164,7 @@ public class MutablePropertyValues implements PropertyValues, Serializable {
 		return this;
 	}
 
-	/**
+	/** 添加一个 PropertyValue 对象，替换相应属性的任何现有对象或与其合并（如果适用）。
 	 * Add a PropertyValue object, replacing any existing one for the
 	 * corresponding property or getting merged with it (if applicable).
 	 * @param pv the PropertyValue object to add
@@ -349,7 +351,7 @@ public class MutablePropertyValues implements PropertyValues, Serializable {
 		}
 	}
 
-	/**
+	/** 将此持有者标记为仅包含转换值
 	 * Mark this holder as containing converted values only
 	 * (i.e. no runtime resolution needed anymore).
 	 */
@@ -357,7 +359,8 @@ public class MutablePropertyValues implements PropertyValues, Serializable {
 		this.converted = true;
 	}
 
-	/**
+	/** 返回此持有者是否仅包含转换后的值 ({@code true})，或者值是否仍需要转换 ({@code false})。
+	 *
 	 * Return whether this holder contains converted values only ({@code true}),
 	 * or whether the values still need to be converted ({@code false}).
 	 */

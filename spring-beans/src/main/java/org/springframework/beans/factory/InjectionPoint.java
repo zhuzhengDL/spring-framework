@@ -27,6 +27,9 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 注入点的简单描述符，指向方法/构造函数参数或字段。由 {@link UnsatisfiedDependencyException} 暴露。
+ * 也可用作工厂方法的参数，对请求注入点做出反应以构建自定义 bean 实例。
+ *
  * A simple descriptor for an injection point, pointing to a method/constructor
  * parameter or a field. Exposed by {@link UnsatisfiedDependencyException}.
  * Also available as an argument for factory methods, reacting to the

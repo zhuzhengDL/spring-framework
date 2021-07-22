@@ -798,7 +798,7 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 	}
 
 
-	/**
+	/** 具有预先解析的目标 bean 名称的 DependencyDescriptor 变体。
 	 * DependencyDescriptor variant with a pre-resolved target bean name.
 	 */
 	@SuppressWarnings("serial")

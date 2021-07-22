@@ -28,6 +28,8 @@ package org.springframework.core.metrics;
 public interface ApplicationStartup {
 
 	/**
+	 * 默认“无操作”{@code ApplicationStartup} 实现。
+	 * <p>此变体旨在将开销降至最低，并且不记录数据。
 	 * Default "no op" {@code ApplicationStartup} implementation.
 	 * <p>This variant is designed for minimal overhead and does not record data.
 	 */

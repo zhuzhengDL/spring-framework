@@ -45,7 +45,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-/**
+/** 用于 bean 工厂实现的 Helper 类，将 bean 定义对象中包含的值解析为应用于目标 bean
+ *  实例的实际值。
+ *
  * Helper class for use in bean factory implementations,
  * resolving values contained in bean definition objects
  * into the actual values applied to the target bean instance.
@@ -69,7 +71,7 @@ class BeanDefinitionValueResolver {
 	private final TypeConverter typeConverter;
 
 
-	/**
+	/** 为给定的 BeanFactory 和 BeanDefinition 创建一个 BeanDefinitionValueResolver。
 	 * Create a BeanDefinitionValueResolver for the given BeanFactory and BeanDefinition.
 	 * @param beanFactory the BeanFactory to resolve against
 	 * @param beanName the name of the bean that we work on

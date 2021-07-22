@@ -188,6 +188,7 @@ public abstract class BeanUtils {
 	public static <T> T instantiateClass(Constructor<T> ctor, Object... args) throws BeanInstantiationException {
 		Assert.notNull(ctor, "Constructor must not be null");
 		try {
+			// 设置构造方法，可访问
 			ReflectionUtils.makeAccessible(ctor);
 			if (KotlinDetector.isKotlinReflectPresent() && KotlinDetector.isKotlinType(ctor.getDeclaringClass())) {
 				return KotlinDelegate.instantiateClass(ctor, args);
@@ -205,9 +206,11 @@ public abstract class BeanUtils {
 						argsWithDefaultValues[i] = args[i];
 					}
 				}
+				// 设置构造方法，可访问
 				return ctor.newInstance(argsWithDefaultValues);
 			}
 		}
+		// 各种异常的翻译，最终统一抛出 BeanInstantiationException 异常
 		catch (InstantiationException ex) {
 			throw new BeanInstantiationException(ctor, "Is it an abstract class?", ex);
 		}
@@ -591,7 +594,7 @@ public abstract class BeanUtils {
 		return Object.class;
 	}
 
-	/**
+	/** 为指定属性的写入方法获取一个新的 MethodParameter 对象。
 	 * Obtain a new MethodParameter object for the write method of the
 	 * specified property.
 	 * @param pd the PropertyDescriptor for the property
@@ -646,6 +649,10 @@ public abstract class BeanUtils {
 	}
 
 	/**
+	 * 检查给定类型是否表示“简单”值类型：
+	 * 原始或原始包装器、枚举、字符串或其他
+	 * CharSequence、数字、日期、时间、URI、URL、区域设置或类。
+	 *
 	 * Check if the given type represents a "simple" value type: a primitive or
 	 * primitive wrapper, an enum, a String or other CharSequence, a Number, a
 	 * Date, a Temporal, a URI, a URL, a Locale, or a Class.
