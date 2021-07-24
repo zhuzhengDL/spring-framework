@@ -754,6 +754,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
+	 * 实例化并注册所有 BeanPostProcessor bean，
+	 * * 尊重明确的顺序（如果给出）。
+	 * * <p>必须在应用程序 bean 的任何实例化之前调用。
+	 *
 	 * Instantiate and register all BeanPostProcessor beans,
 	 * respecting explicit order if given.
 	 * <p>Must be called before any instantiation of application beans.

@@ -1006,7 +1006,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		this.beanPostProcessors.add(beanPostProcessor);
 	}
 
-	/**
+	/** 添加新的 BeanPostProcessors 将应用于此工厂创建的 bean
 	 * Add new BeanPostProcessors that will get applied to beans created
 	 * by this factory. To be invoked during factory configuration.
 	 * @since 5.3

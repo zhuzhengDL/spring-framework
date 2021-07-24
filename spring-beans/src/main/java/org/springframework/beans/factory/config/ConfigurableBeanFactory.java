@@ -245,7 +245,7 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 */
 	void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
 
-	/**
+	/** 返回当前注册的 BeanPostProcessor 数量（如果有）。
 	 * Return the current number of registered BeanPostProcessors, if any.
 	 */
 	int getBeanPostProcessorCount();
