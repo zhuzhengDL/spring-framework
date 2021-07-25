@@ -27,7 +27,13 @@ import org.springframework.util.PropertyPlaceholderHelper;
 import org.springframework.util.PropertyPlaceholderHelper.PlaceholderResolver;
 import org.springframework.util.StringValueResolver;
 
-/**
+/**{@link PlaceholderConfigurerSupport} 子类解析 ${...} 占位符
+ {@link #setLocation local} {@link #setProperties 属性} 和/或系统属性
+ 和环境变量。
+ *
+ * 从 5.2 开始弃用；使用 {@code org.springframework.context.support.PropertySourcesPlaceholderConfigurer} 代替，
+ * 通过利用 {@linkorg.springframework.core.env.Environment} 和 {@linkorg.springframework.core.env.PropertySource} 机制更加灵活.
+ *
  * {@link PlaceholderConfigurerSupport} subclass that resolves ${...} placeholders against
  * {@link #setLocation local} {@link #setProperties properties} and/or system properties
  * and environment variables.

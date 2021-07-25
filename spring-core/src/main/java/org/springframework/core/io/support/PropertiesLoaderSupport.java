@@ -46,6 +46,7 @@ public abstract class PropertiesLoaderSupport {
 	@Nullable
 	protected Properties[] localProperties;
 
+	//本地覆盖
 	protected boolean localOverride = false;
 
 	@Nullable
@@ -139,7 +140,9 @@ public abstract class PropertiesLoaderSupport {
 	}
 
 
-	/**
+	/** 返回一个合并的 Properties 实例，
+	 * 其中包含已加载的属性和在此 FactoryBean 上设置的属性。
+	 *
 	 * Return a merged Properties instance containing both the
 	 * loaded properties and properties set on this FactoryBean.
 	 */
@@ -165,7 +168,8 @@ public abstract class PropertiesLoaderSupport {
 		return result;
 	}
 
-	/**
+	/**将属性加载到给定的实例中。
+	 *
 	 * Load properties into the given instance.
 	 * @param props the Properties instance to load into
 	 * @throws IOException in case of I/O errors

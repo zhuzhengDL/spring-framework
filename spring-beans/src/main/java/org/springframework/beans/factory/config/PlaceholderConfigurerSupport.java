@@ -115,7 +115,7 @@ public abstract class PlaceholderConfigurerSupport extends PropertyResourceConfi
 
 	@Nullable
 	protected String nullValue;
-
+  //忽略无法解析的占位符
 	protected boolean ignoreUnresolvablePlaceholders = false;
 
 	@Nullable
@@ -214,14 +214,18 @@ public abstract class PlaceholderConfigurerSupport extends PropertyResourceConfi
 
 	protected void doProcessProperties(ConfigurableListableBeanFactory beanFactoryToProcess,
 			StringValueResolver valueResolver) {
-
+        // <2.1> 创建 BeanDefinitionVisitor 对象
 		BeanDefinitionVisitor visitor = new BeanDefinitionVisitor(valueResolver);
-
+         //获取所有的BeanDefinitionNames数组
 		String[] beanNames = beanFactoryToProcess.getBeanDefinitionNames();
 		for (String curName : beanNames) {
+			// 校验
 			// Check that we're not parsing our own bean definition,
 			// to avoid failing on unresolvable placeholders in properties file locations.
+			// 1. 当前实例 PlaceholderConfigurerSupport 不在解析范围内
+			// 2. 不是同一个 Spring 容器
 			if (!(curName.equals(this.beanName) && beanFactoryToProcess.equals(this.beanFactory))) {
+				//获取bean定义 BeanDefinition
 				BeanDefinition bd = beanFactoryToProcess.getBeanDefinition(curName);
 				try {
 					visitor.visitBeanDefinition(bd);
@@ -231,11 +235,13 @@ public abstract class PlaceholderConfigurerSupport extends PropertyResourceConfi
 				}
 			}
 		}
-
 		// New in Spring 2.5: resolve placeholders in alias target names and aliases as well.
+		//Spring 2.5 中的新功能：解析别名目标名称和别名中的占位符。
+		// <2.3> 别名的占位符
 		beanFactoryToProcess.resolveAliases(valueResolver);
 
 		// New in Spring 3.0: resolve placeholders in embedded values such as annotation attributes.
+		//Spring 3.0 中的新功能：解析嵌入值（例如注释属性）中的占位符。
 		beanFactoryToProcess.addEmbeddedValueResolver(valueResolver);
 	}
 

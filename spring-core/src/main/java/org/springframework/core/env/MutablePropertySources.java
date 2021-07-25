@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 
 import org.springframework.lang.Nullable;
 
-/**
+/** 可变属性源
  * The default implementation of the {@link PropertySources} interface.
  * Allows manipulation of contained property sources and provides a constructor
  * for copying an existing {@code PropertySources} instance.

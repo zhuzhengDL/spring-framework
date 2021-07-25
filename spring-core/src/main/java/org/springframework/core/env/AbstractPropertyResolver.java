@@ -205,8 +205,10 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 	@Override
 	public String resolveRequiredPlaceholders(String text) throws IllegalArgumentException {
 		if (this.strictHelper == null) {
+			//创建PropertyPlaceholderHelper 通过PropertyPlaceholderHelper来解析变量字符串
 			this.strictHelper = createPlaceholderHelper(false);
 		}
+		//解析属性变量
 		return doResolvePlaceholders(text, this.strictHelper);
 	}
 
@@ -236,6 +238,7 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 	}
 
 	private String doResolvePlaceholders(String text, PropertyPlaceholderHelper helper) {
+		//声明一个PlaceholderResolver 用来解析变量字符串 （实现PlaceholderResolver.resolvePlaceholder方法的是直接从属性来源中获取对应的变量值）
 		return helper.replacePlaceholders(text, this::getPropertyAsRawString);
 	}
 
