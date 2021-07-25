@@ -22,7 +22,7 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
-/**
+/** 通用转换器
  * Generic converter interface for converting between two or more types.
  *
  * <p>This is the most flexible of the Converter SPI interfaces, but also the most complex.
@@ -56,7 +56,7 @@ public interface GenericConverter {
 	@Nullable
 	Set<ConvertiblePair> getConvertibleTypes();
 
-	/**
+	/** 将源对象转换为 {@code TypeDescriptor} 描述的 targetType。
 	 * Convert the source object to the targetType described by the {@code TypeDescriptor}.
 	 * @param source the source object to convert (may be {@code null})
 	 * @param sourceType the type descriptor of the field we are converting from

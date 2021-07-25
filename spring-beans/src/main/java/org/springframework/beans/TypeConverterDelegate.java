@@ -98,7 +98,8 @@ class TypeConverterDelegate {
 		return convertIfNecessary(propertyName, oldValue, newValue, requiredType, TypeDescriptor.valueOf(requiredType));
 	}
 
-	/**
+	/** 对于指定的属性，将值转换为所需的类型（如有必要，从字符串）。
+	 *
 	 * Convert the value to the required type (if necessary from a String),
 	 * for the specified property.
 	 * @param propertyName name of the property
