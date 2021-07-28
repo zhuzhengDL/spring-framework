@@ -95,7 +95,7 @@ public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements
 		super(registerDefaultEditors);
 	}
 
-	/**
+	/** 为给定的对象创建一个新的 BeanWrapperImpl。
 	 * Create a new BeanWrapperImpl for the given object.
 	 * @param object the object wrapped by this BeanWrapper
 	 */

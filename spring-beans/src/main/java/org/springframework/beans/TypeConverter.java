@@ -22,7 +22,9 @@ import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.lang.Nullable;
 
-/**
+/** 定义类型转换方法的接口。通常（但不一定与 {@link PropertyEditorRegistry} 接口一起实现。
+ *
+ *
  * Interface that defines type conversion methods. Typically (but not necessarily)
  * implemented in conjunction with the {@link PropertyEditorRegistry} interface.
  *
