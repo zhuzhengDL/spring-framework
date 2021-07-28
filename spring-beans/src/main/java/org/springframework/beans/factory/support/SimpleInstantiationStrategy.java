@@ -31,7 +31,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
-/**
+/** 在 BeanFactory 中使用的简单对象实例化策略。
  * Simple object instantiation strategy for use in a BeanFactory.
  *
  * <p>Does not support Method Injection, although it provides hooks for subclasses
@@ -153,6 +153,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 			@Nullable Object factoryBean, final Method factoryMethod, Object... args) {
 
 		try {
+			// 设置 Method 可访问
 			if (System.getSecurityManager() != null) {
 				AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
 					ReflectionUtils.makeAccessible(factoryMethod);
@@ -162,17 +163,20 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 			else {
 				ReflectionUtils.makeAccessible(factoryMethod);
 			}
-
+			// 获得原 Method 对象
 			Method priorInvokedFactoryMethod = currentlyInvokedFactoryMethod.get();
 			try {
 				currentlyInvokedFactoryMethod.set(factoryMethod);
+				// 创建 Bean 对象
 				Object result = factoryMethod.invoke(factoryBean, args);
+				// 未创建，则创建 NullBean 对象
 				if (result == null) {
 					result = new NullBean();
 				}
 				return result;
 			}
 			finally {
+				// 还原设置老的 Method 对象，到 currentlyInvokedFactoryMethod 中
 				if (priorInvokedFactoryMethod != null) {
 					currentlyInvokedFactoryMethod.set(priorInvokedFactoryMethod);
 				}
@@ -181,6 +185,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 				}
 			}
 		}
+		// 一大堆 catch 异常
 		catch (IllegalArgumentException ex) {
 			throw new BeanInstantiationException(factoryMethod,
 					"Illegal arguments to factory method '" + factoryMethod.getName() + "'; " +

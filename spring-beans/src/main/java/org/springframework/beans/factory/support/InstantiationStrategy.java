@@ -23,7 +23,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.lang.Nullable;
 
-/**
+/**负责创建对应于root bean definition.的实例的接口。
  * Interface responsible for creating instances corresponding to a root bean definition.
  *
  * <p>This is pulled out into a strategy as various approaches are possible,
@@ -32,10 +32,11 @@ import org.springframework.lang.Nullable;
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 1.1
- */
-public interface InstantiationStrategy {
+ */public interface InstantiationStrategy {
 
 	/**
+	 * 默认构造方法 实例化bean
+	 * 返回此工厂中具有给定名称的 bean 实例。
 	 * Return an instance of the bean with the given name in this factory.
 	 * @param bd the bean definition
 	 * @param beanName the name of the bean when it is created in this context.
@@ -49,6 +50,9 @@ public interface InstantiationStrategy {
 			throws BeansException;
 
 	/**
+	 *  指定构造方法
+	 *  返回此工厂中具有给定名称的 bean 实例，通过给定的构造函数创建它。
+	 *
 	 * Return an instance of the bean with the given name in this factory,
 	 * creating it via the given constructor.
 	 * @param bd the bean definition
@@ -62,9 +66,11 @@ public interface InstantiationStrategy {
 	 * @throws BeansException if the instantiation attempt failed
 	 */
 	Object instantiate(RootBeanDefinition bd, @Nullable String beanName, BeanFactory owner,
-			Constructor<?> ctor, Object... args) throws BeansException;
+					   Constructor<?> ctor, Object... args) throws BeansException;
 
-	/**
+	/** 工厂方法
+	 * 返回此工厂中具有给定名称的 bean 的实例，通过给定的工厂方法创建它。
+	 *
 	 * Return an instance of the bean with the given name in this factory,
 	 * creating it via the given factory method.
 	 * @param bd the bean definition
@@ -80,7 +86,8 @@ public interface InstantiationStrategy {
 	 * @throws BeansException if the instantiation attempt failed
 	 */
 	Object instantiate(RootBeanDefinition bd, @Nullable String beanName, BeanFactory owner,
-			@Nullable Object factoryBean, Method factoryMethod, Object... args)
+					   @Nullable Object factoryBean, Method factoryMethod, Object... args)
 			throws BeansException;
 
 }
+
