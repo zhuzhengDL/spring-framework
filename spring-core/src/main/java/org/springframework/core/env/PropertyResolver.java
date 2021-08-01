@@ -18,7 +18,7 @@ package org.springframework.core.env;
 
 import org.springframework.lang.Nullable;
 
-/**
+/** 用于针对任何基础源解析属性的接口。
  * Interface for resolving properties against any underlying source.
  *
  * @author Chris Beams
@@ -29,13 +29,13 @@ import org.springframework.lang.Nullable;
  */
 public interface PropertyResolver {
 
-	/**
+	/** 返回给定的属性键是否可用于解析，
 	 * Return whether the given property key is available for resolution,
 	 * i.e. if the value for the given key is not {@code null}.
 	 */
 	boolean containsProperty(String key);
 
-	/**
+	/** 返回与给定键关联的属性值，
 	 * Return the property value associated with the given key,
 	 * or {@code null} if the key cannot be resolved.
 	 * @param key the property name to resolve
@@ -46,7 +46,7 @@ public interface PropertyResolver {
 	@Nullable
 	String getProperty(String key);
 
-	/**
+	/** 返回与给定键关联的属性值，如果无法解析键，则返回 {@code defaultValue}。
 	 * Return the property value associated with the given key, or
 	 * {@code defaultValue} if the key cannot be resolved.
 	 * @param key the property name to resolve
@@ -56,7 +56,7 @@ public interface PropertyResolver {
 	 */
 	String getProperty(String key, String defaultValue);
 
-	/**
+	/** 返回与给定键关联的属性值，如果无法解析键，则返回 {@code null}。
 	 * Return the property value associated with the given key,
 	 * or {@code null} if the key cannot be resolved.
 	 * @param key the property name to resolve
@@ -66,7 +66,7 @@ public interface PropertyResolver {
 	@Nullable
 	<T> T getProperty(String key, Class<T> targetType);
 
-	/**
+	/** 获取指定类型的属性值，找不到返回默认值
 	 * Return the property value associated with the given key,
 	 * or {@code defaultValue} if the key cannot be resolved.
 	 * @param key the property name to resolve
@@ -76,21 +76,21 @@ public interface PropertyResolver {
 	 */
 	<T> T getProperty(String key, Class<T> targetType, T defaultValue);
 
-	/**
+	/** 获取属性值，找不到抛出异常IllegalStateException
 	 * Return the property value associated with the given key (never {@code null}).
 	 * @throws IllegalStateException if the key cannot be resolved
 	 * @see #getRequiredProperty(String, Class)
 	 */
 	String getRequiredProperty(String key) throws IllegalStateException;
 
-	/**
+	/** 获取指定类型的属性值，找不到抛出异常IllegalStateException
 	 * Return the property value associated with the given key, converted to the given
 	 * targetType (never {@code null}).
 	 * @throws IllegalStateException if the given key cannot be resolved
 	 */
 	<T> T getRequiredProperty(String key, Class<T> targetType) throws IllegalStateException;
 
-	/**
+	/** 替换文本中的占位符（${key}）到属性值，找不到不解析
 	 * Resolve ${...} placeholders in the given text, replacing them with corresponding
 	 * property values as resolved by {@link #getProperty}. Unresolvable placeholders with
 	 * no default value are ignored and passed through unchanged.
@@ -101,7 +101,7 @@ public interface PropertyResolver {
 	 */
 	String resolvePlaceholders(String text);
 
-	/**
+	/** 替换文本中的占位符（${key}）到属性值，找不到抛出异常IllegalArgumentException
 	 * Resolve ${...} placeholders in the given text, replacing them with corresponding
 	 * property values as resolved by {@link #getProperty}. Unresolvable placeholders with
 	 * no default value will cause an IllegalArgumentException to be thrown.

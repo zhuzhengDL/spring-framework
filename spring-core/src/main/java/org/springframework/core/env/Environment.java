@@ -70,7 +70,8 @@ package org.springframework.core.env;
  */
 public interface Environment extends PropertyResolver {
 
-	/**
+	/** / 返回此环境下激活的配置文件集
+	 *
 	 * Return the set of profiles explicitly made active for this environment. Profiles
 	 * are used for creating logical groupings of bean definitions to be registered
 	 * conditionally, for example based on deployment environment. Profiles can be
@@ -85,7 +86,10 @@ public interface Environment extends PropertyResolver {
 	 */
 	String[] getActiveProfiles();
 
-	/**
+	/**如果未设置激活配置文件，则返回默认的激活的配置文件集
+	 *
+	 * 当没有明确设置活动配置文件时，默认情况下返回要激活的配置文件集。
+	 *
 	 * Return the set of profiles to be active by default when no active profiles have
 	 * been set explicitly.
 	 * @see #getActiveProfiles
@@ -111,7 +115,7 @@ public interface Environment extends PropertyResolver {
 	@Deprecated
 	boolean acceptsProfiles(String... profiles);
 
-	/**
+	/** 返回 {@linkplain #getActiveProfiles() active profiles} 是否与给定的 {@link Profiles} 谓词匹配。
 	 * Return whether the {@linkplain #getActiveProfiles() active profiles}
 	 * match the given {@link Profiles} predicate.
 	 */

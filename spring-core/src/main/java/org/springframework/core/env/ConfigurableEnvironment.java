@@ -71,7 +71,10 @@ import java.util.Map;
  */
 public interface ConfigurableEnvironment extends Environment, ConfigurablePropertyResolver {
 
-	/**
+	/**  指定该环境下的 profile 集
+	 * 指定此 {@code Environment} 的活动配置文件集。
+	 * 在容器引导期间评估配置文件以确定是否应向容器注册 bean 定义。
+	 *
 	 * Specify the set of profiles active for this {@code Environment}. Profiles are
 	 * evaluated during container bootstrap to determine whether bean definitions
 	 * should be registered with the container.
@@ -86,14 +89,17 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	 */
 	void setActiveProfiles(String... profiles);
 
-	/**
+	/** 增加此环境的 profile
+	 * 将配置文件添加到当前的活动配置文件集。
+	 *
 	 * Add a profile to the current set of active profiles.
 	 * @throws IllegalArgumentException if the profile is null, empty or whitespace-only
 	 * @see #setActiveProfiles
 	 */
 	void addActiveProfile(String profile);
 
-	/**
+	/**  设置默认的 profile
+	 *
 	 * Specify the set of profiles to be made active by default if no other profiles
 	 * are explicitly made active through {@link #setActiveProfiles}.
 	 * @throws IllegalArgumentException if any profile is null, empty or whitespace-only
@@ -101,7 +107,8 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	 */
 	void setDefaultProfiles(String... profiles);
 
-	/**
+	/** 返回此环境的 PropertySources
+	 *
 	 * Return the {@link PropertySources} for this {@code Environment} in mutable form,
 	 * allowing for manipulation of the set of {@link PropertySource} objects that should
 	 * be searched when resolving properties against this {@code Environment} object.
@@ -118,7 +125,8 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	 */
 	MutablePropertySources getPropertySources();
 
-	/**
+	/** 尝试返回 System.getProperties() 的值，若失败则返回通过 System.getProperties(string) 的来访问各个键的映射
+	 *
 	 * Return the value of {@link System#getProperties()} if allowed by the current
 	 * {@link SecurityManager}, otherwise return a map implementation that will attempt
 	 * to access individual keys using calls to {@link System#getProperty(String)}.
@@ -133,7 +141,8 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	 */
 	Map<String, Object> getSystemProperties();
 
-	/**
+	/** 尝试返回 System.getenv() 的值，若失败则返回通过 System.getenv(string) 的来访问各个键的映射
+	 *
 	 * Return the value of {@link System#getenv()} if allowed by the current
 	 * {@link SecurityManager}, otherwise return a map implementation that will attempt
 	 * to access individual keys using calls to {@link System#getenv(String)}.

@@ -27,7 +27,9 @@ import org.apache.commons.logging.LogFactory;
 
 import org.springframework.lang.Nullable;
 
-/**
+/** 用于处理包含占位符值的字符串的实用程序类。占位符采用 {@code ${name}} 形式。
+ * 使用 {@code PropertyPlaceholderHelper} 这些占位符可以替换用户提供的值。
+ *
  * Utility class for working with Strings that have placeholder values in them.
  * A placeholder takes the form {@code ${name}}. Using {@code PropertyPlaceholderHelper}
  * these placeholders can be substituted for user-supplied values.
@@ -51,16 +53,16 @@ public class PropertyPlaceholderHelper {
 		wellKnownSimplePrefixes.put(")", "(");
 	}
 
-
+     //占位符前缀。
 	private final String placeholderPrefix;
-
+     //占位符后缀。
 	private final String placeholderSuffix;
 
 	private final String simplePrefix;
-
+	//占位符变量与关联的默认值之间的分隔符。
 	@Nullable
 	private final String valueSeparator;
-
+    //指示是否忽略不可解析的占位符（true）或抛出异常（false）
 	private final boolean ignoreUnresolvablePlaceholders;
 
 
@@ -74,7 +76,8 @@ public class PropertyPlaceholderHelper {
 		this(placeholderPrefix, placeholderSuffix, null, true);
 	}
 
-	/**
+	/** 创建一个使用提供的前缀和后缀的新 {@code PropertyPlaceholderHelper}。
+	 *
 	 * Creates a new {@code PropertyPlaceholderHelper} that uses the supplied prefix and suffix.
 	 * @param placeholderPrefix the prefix that denotes the start of a placeholder
 	 * @param placeholderSuffix the suffix that denotes the end of a placeholder

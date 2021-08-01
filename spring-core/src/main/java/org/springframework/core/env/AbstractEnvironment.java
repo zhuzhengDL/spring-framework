@@ -66,7 +66,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 */
 	public static final String IGNORE_GETENV_PROPERTY_NAME = "spring.getenv.ignore";
 
-	/**
+	/** 要设置以指定活动配置文件的属性名称：{@value}。值可以用逗号分隔。
 	 * Name of property to set to specify active profiles: {@value}. Value may be comma
 	 * delimited.
 	 * <p>Note that certain shell environments such as Bash disallow the use of the period
@@ -77,7 +77,8 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 */
 	public static final String ACTIVE_PROFILES_PROPERTY_NAME = "spring.profiles.active";
 
-	/**
+	/** 要设置以指定默认情况下处于活动状态的配置文件的属性名称：{@value}。值可以用逗号分隔。
+	 *
 	 * Name of property to set to specify profiles active by default: {@value}. Value may
 	 * be comma delimited.
 	 * <p>Note that certain shell environments such as Bash disallow the use of the period
@@ -123,7 +124,10 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 		this(new MutablePropertySources());
 	}
 
-	/**
+	/** 使用特定的 {@link MutablePropertySources} 实例创建一个新的 {@code Environment} 实例，
+	 * 在构造期间回调 {@link #customizePropertySources(MutablePropertySources)}
+	 * 以允许子类根据需要贡献或操作 {@link PropertySource} 实例。
+	 *
 	 * Create a new {@code Environment} instance with a specific
 	 * {@link MutablePropertySources} instance, calling back to
 	 * {@link #customizePropertySources(MutablePropertySources)} during
@@ -268,9 +272,12 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 */
 	protected Set<String> doGetActiveProfiles() {
 		synchronized (this.activeProfiles) {
+			// 如果 activeProfiles 为空，则进行初始化
 			if (this.activeProfiles.isEmpty()) {
+				// 获得 ACTIVE_PROFILES_PROPERTY_NAME 对应的 profiles 属性值
 				String profiles = doGetActiveProfilesProperty();
 				if (StringUtils.hasText(profiles)) {
+					// 设置到 activeProfiles 中
 					setActiveProfiles(StringUtils.commaDelimitedListToStringArray(
 							StringUtils.trimAllWhitespace(profiles)));
 				}
@@ -279,7 +286,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 		}
 	}
 
-	/**
+	/** // 获得 ACTIVE_PROFILES_PROPERTY_NAME 对应的 profiles 属性值
 	 * Return the property value for the active profiles.
 	 * @since 5.3.4
 	 * @see #ACTIVE_PROFILES_PROPERTY_NAME
@@ -296,8 +303,11 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 			logger.debug("Activating profiles " + Arrays.asList(profiles));
 		}
 		synchronized (this.activeProfiles) {
+			// 清空 activeProfiles
 			this.activeProfiles.clear();
+			// 遍历 profiles 数组，添加到 activeProfiles 中
 			for (String profile : profiles) {
+				// 校验
 				validateProfile(profile);
 				this.activeProfiles.add(profile);
 			}
@@ -411,7 +421,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 				(currentActiveProfiles.isEmpty() && doGetDefaultProfiles().contains(profile)));
 	}
 
-	/**
+	/** 验证给定的配置文件
 	 * Validate the given profile, called internally prior to adding to the set of
 	 * active or default profiles.
 	 * <p>Subclasses may override to impose further restrictions on profile syntax.

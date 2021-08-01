@@ -24,6 +24,12 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 表示名称/值属性对来源的抽象基类。底层 {@linkplain #getSource() 源对象}
+ * 可以是封装属性的任何类型 {@code T}。示例包括 {@link java.util.Properties} 对象、{@link java.util.Map} 对象、
+ * {@code ServletContext} 和 {@code ServletConfig} 对象（用于访问初始化参数）。
+ * 探索 {@code PropertySource} 类型层次结构以查看提供的实现。
+ *
+ *
  * Abstract base class representing a source of name/value property pairs. The underlying
  * {@linkplain #getSource() source object} may be of any type {@code T} that encapsulates
  * properties. Examples include {@link java.util.Properties} objects, {@link java.util.Map}
