@@ -113,21 +113,30 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 
 
 	/**
+	 * 此实现执行此上下文底层的实际刷新bean factory，关闭之前的 bean factory（如果有的话）和
+	 * 为上下文生命周期的下一阶段初始化一个新的 bean 工厂。
+
 	 * This implementation performs an actual refresh of this context's underlying
 	 * bean factory, shutting down the previous bean factory (if any) and
 	 * initializing a fresh bean factory for the next phase of the context's lifecycle.
 	 */
 	@Override
 	protected final void refreshBeanFactory() throws BeansException {
+		// 若已有 BeanFactory ，销毁它的 Bean 们，并销毁 BeanFactory
 		if (hasBeanFactory()) {
 			destroyBeans();
 			closeBeanFactory();
 		}
 		try {
+			// 创建 BeanFactory 对象
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
+			// 指定序列化编号
 			beanFactory.setSerializationId(getId());
+			// 定制 BeanFactory 设置相关属性
 			customizeBeanFactory(beanFactory);
+			// 加载 BeanDefinition 们
 			loadBeanDefinitions(beanFactory);
+			// 设置 Context 的 BeanFactory
 			this.beanFactory = beanFactory;
 		}
 		catch (IOException ex) {
@@ -179,7 +188,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	protected void assertBeanFactoryActive() {
 	}
 
-	/**
+	/** 为此上下文创建一个内部 bean 工厂。 DefaultListableBeanFactory
 	 * Create an internal bean factory for this context.
 	 * Called for each {@link #refresh()} attempt.
 	 * <p>The default implementation creates a
@@ -220,7 +229,8 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 		}
 	}
 
-	/**
+	/** 将 bean 定义加载到给定的 bean 工厂中，通常是通过委托给一个或多个 bean 定义读取器。
+	 *
 	 * Load bean definitions into the given bean factory, typically through
 	 * delegating to one or more bean definition readers.
 	 * @param beanFactory the bean factory to load bean definitions into

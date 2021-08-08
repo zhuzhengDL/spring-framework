@@ -52,7 +52,9 @@ public interface ConfigurableWebApplicationContext extends WebApplicationContext
 	String SERVLET_CONFIG_BEAN_NAME = "servletConfig";
 
 
-	/**
+	/**为此 Web 应用程序上下文设置 ServletContext。
+	 * <p>不会引起上下文的初始化：在所有配置属性设置后需要调用refresh。
+	 *
 	 * Set the ServletContext for this web application context.
 	 * <p>Does not cause an initialization of the context: refresh needs to be
 	 * called after the setting of all configuration properties.
@@ -60,33 +62,38 @@ public interface ConfigurableWebApplicationContext extends WebApplicationContext
 	 */
 	void setServletContext(@Nullable ServletContext servletContext);
 
-	/**
+	/** 为此 Web 应用程序上下文设置 ServletConfig。只调用属于特定 Servlet 的 WebApplicationContext。
+	 *
 	 * Set the ServletConfig for this web application context.
 	 * Only called for a WebApplicationContext that belongs to a specific Servlet.
 	 * @see #refresh()
 	 */
 	void setServletConfig(@Nullable ServletConfig servletConfig);
 
-	/**
+	/** 返回此 Web 应用程序上下文的 ServletConfig（如果有）。
 	 * Return the ServletConfig for this web application context, if any.
 	 */
 	@Nullable
 	ServletConfig getServletConfig();
 
-	/**
+	/** 设置此 Web 应用程序上下文的命名空间，用于构建默认上下文配置位置。根 Web 应用程序上下文没有命名空间。
+	 *
 	 * Set the namespace for this web application context,
 	 * to be used for building a default context config location.
 	 * The root web application context does not have a namespace.
 	 */
 	void setNamespace(@Nullable String namespace);
 
-	/**
+	/** 返回此 Web 应用程序上下文的命名空间（如果有）。
+	 *
 	 * Return the namespace for this web application context, if any.
 	 */
 	@Nullable
 	String getNamespace();
 
-	/**
+	/** 以 init-param 样式设置此 Web 应用程序上下文的配置位置，即使用逗号、分号或空格分隔的不同位置。
+	 <p>如果未设置，则实现应该根据需要使用给定命名空间或根 Web 应用程序上下文的默认值。
+
 	 * Set the config locations for this web application context in init-param style,
 	 * i.e. with distinct locations separated by commas, semicolons or whitespace.
 	 * <p>If not set, the implementation is supposed to use a default for the
@@ -94,14 +101,17 @@ public interface ConfigurableWebApplicationContext extends WebApplicationContext
 	 */
 	void setConfigLocation(String configLocation);
 
-	/**
+	/**设置此 Web 应用程序上下文的配置位置。
+	 <p>如果未设置，则实现应该根据需要使用给定命名空间或根 Web 应用程序上下文的默认值。
+
 	 * Set the config locations for this web application context.
 	 * <p>If not set, the implementation is supposed to use a default for the
 	 * given namespace or the root web application context, as appropriate.
 	 */
 	void setConfigLocations(String... configLocations);
 
-	/**
+	/**  返回此 Web 应用程序上下文的配置位置，如果未指定，则返回 {@code null}。
+	 *
 	 * Return the config locations for this web application context,
 	 * or {@code null} if none specified.
 	 */

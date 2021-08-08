@@ -132,7 +132,8 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 		this.setIdCalled = true;
 	}
 
-	/**
+	/** 默认情况下将此上下文的 id 设置为 bean 名称，对于上下文实例本身定义为 bean 的情况。
+	 *
 	 * Sets the id of this context to the bean name by default,
 	 * for cases where the context instance is itself defined as a bean.
 	 */
@@ -144,7 +145,8 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 		}
 	}
 
-	/**
+	/** 如果尚未在具体上下文的构造函数中刷新，则触发 {@link #refresh()}。
+	 *
 	 * Triggers {@link #refresh()} if not refreshed in the concrete context's
 	 * constructor already.
 	 */

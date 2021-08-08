@@ -132,7 +132,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 		return (Map<Resource, T>) this.resourceCaches.computeIfAbsent(valueType, key -> new ConcurrentHashMap<>());
 	}
 
-	/**
+	/** 清除此资源加载器中的所有资源缓存。
 	 * Clear all resource caches in this resource loader.
 	 * @since 5.0
 	 * @see #getResourceCache

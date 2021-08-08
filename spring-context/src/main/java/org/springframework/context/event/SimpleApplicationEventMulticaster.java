@@ -66,7 +66,7 @@ public class SimpleApplicationEventMulticaster extends AbstractApplicationEventM
 	public SimpleApplicationEventMulticaster() {
 	}
 
-	/**
+	/** 为给定的 BeanFactory 创建一个新的 SimpleApplicationEventMulticaster。
 	 * Create a new SimpleApplicationEventMulticaster for the given BeanFactory.
 	 */
 	public SimpleApplicationEventMulticaster(BeanFactory beanFactory) {

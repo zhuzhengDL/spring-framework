@@ -34,7 +34,7 @@ import org.springframework.lang.Nullable;
  */
 public interface SingletonBeanRegistry {
 
-	/**
+	/** 在给定的 bean 名称下，在 bean 注册表中将给定的现有对象注册为单例。
 	 * Register the given existing object as singleton in the bean registry,
 	 * under the given bean name.
 	 * <p>The given instance is supposed to be fully initialized; the registry

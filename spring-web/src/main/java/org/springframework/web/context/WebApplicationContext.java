@@ -72,7 +72,7 @@ public interface WebApplicationContext extends ApplicationContext {
 	 */
 	String SCOPE_APPLICATION = "application";
 
-	/**
+	/** 工厂中 ServletContext 环境 bean 的名称。
 	 * Name of the ServletContext environment bean in the factory.
 	 * @see javax.servlet.ServletContext
 	 */
@@ -97,7 +97,8 @@ public interface WebApplicationContext extends ApplicationContext {
 	String CONTEXT_ATTRIBUTES_BEAN_NAME = "contextAttributes";
 
 
-	/**
+	/** 返回此应用程序的标准 Servlet API ServletContext。
+	 *
 	 * Return the standard Servlet API ServletContext for this application.
 	 */
 	@Nullable

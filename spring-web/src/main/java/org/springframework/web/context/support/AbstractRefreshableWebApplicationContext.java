@@ -161,7 +161,7 @@ public abstract class AbstractRefreshableWebApplicationContext extends AbstractR
 		return new StandardServletEnvironment();
 	}
 
-	/**
+	/** 注册请求/会话范围、{@link ServletContextAwareProcessor} 等。
 	 * Register request/session scopes, a {@link ServletContextAwareProcessor}, etc.
 	 */
 	@Override

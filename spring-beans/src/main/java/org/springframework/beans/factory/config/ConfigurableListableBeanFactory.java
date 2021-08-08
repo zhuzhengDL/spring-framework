@@ -49,7 +49,7 @@ public interface ConfigurableListableBeanFactory
 	 */
 	void ignoreDependencyType(Class<?> type);
 
-	/**
+	/** 忽略给定的自动装配依赖接口。
 	 * Ignore the given dependency interface for autowiring.
 	 * <p>This will typically be used by application contexts to register
 	 * dependencies that are resolved in other ways, like BeanFactory through
@@ -135,6 +135,10 @@ public interface ConfigurableListableBeanFactory
 	void clearMetadataCache();
 
 	/**
+	 * * 冻结所有 bean 定义，表明注册的 bean 定义
+	 * * 不会被进一步修改或后处理。
+	 * * <p>这允许工厂积极缓存 bean 定义元数据。
+
 	 * Freeze all bean definitions, signalling that the registered bean definitions
 	 * will not be modified or post-processed any further.
 	 * <p>This allows the factory to aggressively cache bean definition metadata.
