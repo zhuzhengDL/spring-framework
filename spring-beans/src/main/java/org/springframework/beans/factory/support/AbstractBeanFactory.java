@@ -327,6 +327,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 			StartupStep beanCreation = this.applicationStartup.start("spring.beans.instantiate")
 					.tag("beanName", name);
+			/*
+			 * 稍稍总结一下：
+			 * 到这里的话，要准备创建 Bean 了，对于 singleton 的 Bean 来说，容器中还没创建过此 Bean；
+			 * 对于 prototype 的 Bean 来说，本来就是要创建一个新的 Bean。
+			 */
 			try {
 				if (requiredType != null) {
 					beanCreation.tag("beanType", requiredType::toString);
@@ -338,11 +343,14 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 				// Guarantee initialization of beans that the current bean depends on.
 				// <7> 处理所依赖的 bean  处理所依赖的 bean，保证当前 bean 所依赖的 bean 的初始化。
+				// 先初始化依赖的所有 Bean，这个很好理解。
+				// 注意，这里的依赖指的是 depends-on 中定义的依赖
 				String[] dependsOn = mbd.getDependsOn();
 				if (dependsOn != null) {
 					for (String dep : dependsOn) {
 						//<1> 若给定的依赖 bean 已经注册为依赖给定的 bean
 						// 循环依赖的情况
+						// 检查是不是有循环依赖，这里的循环依赖和我们前面说的循环依赖又不一样，这里肯定是不允许出现的，不然要乱套了，读者想一下就知道了
 						if (isDependent(beanName, dep)) {
 							throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 									"Circular depends-on relationship between '" + beanName + "' and '" + dep + "'");
@@ -351,6 +359,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						registerDependentBean(dep, beanName);
 						try {
 							// <3> 递归处理依赖 Bean
+							// 先初始化被依赖项
 							getBean(dep);
 						}
 						catch (NoSuchBeanDefinitionException ex) {
@@ -361,10 +370,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 
 				// <8> bean 实例化
+				// 如果是 singleton scope 的，创建 singleton 的实例
 				//  Create bean instance.
 				if (mbd.isSingleton()) {  // 单例模式
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
+							// 执行创建 Bean
 							return createBean(beanName, mbd, args);
 						}
 						catch (BeansException ex) {
@@ -382,7 +393,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					// <x>
 					beanInstance = getObjectForBeanInstance(sharedInstance, name, beanName, mbd);
 				}
-
+				// 如果是 prototype scope 的，创建 prototype 的实例
 				else if (mbd.isPrototype()) {// 原型模式
 					// It's a prototype -> create a new instance.
 					Object prototypeInstance = null;
@@ -399,7 +410,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					// <4> 从 Bean 实例中获取对象
 					beanInstance = getObjectForBeanInstance(prototypeInstance, name, beanName, mbd);
 				}
-
+				// 如果不是 singleton 和 prototype 的话，需要委托给相应的实现类来处理
 				else {
 					// 从指定的 scope 下创建 bean
 					String scopeName = mbd.getScope();
@@ -443,6 +454,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 		}
 		// <9> 检查需要的类型是否符合 bean 的实际类型
+		// 最后，检查一下类型对不对，不对的话就抛异常，对的话就返回了
 		return adaptBeanInstance(name, beanInstance, requiredType);
 	}
 

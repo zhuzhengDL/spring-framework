@@ -64,7 +64,8 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 	public ClassPathXmlApplicationContext() {
 	}
 
-	/**
+	/** 如果已经有 ApplicationContext 并需要配置成父子关系，那么调用这个构造方法
+	 *
 	 * Create a new ClassPathXmlApplicationContext for bean-style configuration.
 	 * @param parent the parent context
 	 * @see #setConfigLocation
@@ -139,9 +140,10 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 			throws BeansException {
 
 		super(parent);
+		// 根据提供的路径，处理成配置文件数组(以分号、逗号、空格、tab、换行符分割)
 		setConfigLocations(configLocations);
 		if (refresh) {
-			refresh();
+			refresh();  // 核心方法
 		}
 	}
 

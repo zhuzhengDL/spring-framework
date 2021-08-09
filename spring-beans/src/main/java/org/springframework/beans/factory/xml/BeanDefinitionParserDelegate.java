@@ -408,6 +408,22 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
+	 * <bean id="exampleBean" name="name1, name2, name3" class="com.javadoop.ExampleBean"
+	 *       scope="singleton" lazy-init="true" init-method="init" destroy-method="cleanup">
+	 *
+	 *     <!-- 可以用下面三种形式指定构造参数 -->
+	 *     <constructor-arg type="int" value="7500000"/>
+	 *     <constructor-arg name="years" value="7500000"/>
+	 *     <constructor-arg index="0" value="7500000"/>
+	 *
+	 *     <!-- property 的几种情况 -->
+	 *     <property name="beanOne">
+	 *         <ref bean="anotherExampleBean"/>
+	 *     </property>
+	 *     <property name="beanTwo" ref="yetAnotherBean"/>
+	 *     <property name="integerProperty" value="1"/>
+	 * </bean>
+	 *
 	 * Parses the supplied {@code <bean>} element. May return {@code null}
 	 * if there were errors during parse. Errors are reported to the
 	 * {@link org.springframework.beans.factory.parsing.ProblemReporter}.
@@ -439,7 +455,10 @@ public class BeanDefinitionParserDelegate {
 			checkNameUniqueness(beanName, aliases, ele);
 		}
 		// <4> 解析属性，构造 AbstractBeanDefinition 对象
+		// 根据 <bean ...>...</bean> 中的配置创建 BeanDefinition，然后把配置中的信息都设置到实例中,
+		// 细节后面细说，先知道下面这行结束后，一个 BeanDefinition 实例就出来了。
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
+		// 到这里，整个 <bean /> 标签就算解析结束了，一个 BeanDefinition 就形成了。
 		if (beanDefinition != null) {
 			// <3.3> beanName为空 ，再次，使用 beanName 生成规则
 			if (!StringUtils.hasText(beanName)) {
@@ -474,6 +493,7 @@ public class BeanDefinitionParserDelegate {
 				}
 			}
 			// <5> 创建 BeanDefinitionHolder 对象
+			// 返回 BeanDefinitionHolder
 			String[] aliasesArray = StringUtils.toStringArray(aliases);
 			return new BeanDefinitionHolder(beanDefinition, beanName, aliasesArray);
 		}
@@ -527,8 +547,10 @@ public class BeanDefinitionParserDelegate {
 
 		try {
 			// 创建用于承载属性的 AbstractBeanDefinition 实例
+			// 创建 BeanDefinition，然后设置类信息而已，很简单，就不贴代码了
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
 			// 解析默认 bean 的各种属性
+			// 设置 BeanDefinition 的一堆属性，这些属性定义在 AbstractBeanDefinition 中
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
 			// 提取 description 子节点内容
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));

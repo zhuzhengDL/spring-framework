@@ -185,11 +185,13 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				if (node instanceof Element) {
 					Element ele = (Element) node;
 					// <1> 如果该节点使用默认命名空间，执行默认解析
+					// 解析 default namespace 下面的几个元素
 					if (delegate.isDefaultNamespace(ele)) {
 						parseDefaultElement(ele, delegate);
 					}
 					// 如果该节点非默认命名空间，执行自定义解析
 					else {
+						// 解析 default namespace 下面的几个元素
 						delegate.parseCustomElement(ele);
 					}
 				}
@@ -203,16 +205,21 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 
 	private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
 		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
+			// 处理 <import /> 标签
 			importBeanDefinitionResource(ele);  // import
 		}
 		else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
+			// 处理 <alias /> 标签定义
+			// <alias name="fromName" alias="toName"/>
 			processAliasRegistration(ele);   // alias
 		}
 		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
+			// 处理 <bean /> 标签定义，这也算是我们的重点吧
 			processBeanDefinition(ele, delegate); // bean
 		}
 		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
-			// recurse
+			// 如果碰到的是嵌套的 <beans /> 标签，需要递归
+			// recurse 递归
 			doRegisterBeanDefinitions(ele); // beans
 		}
 	}
@@ -338,6 +345,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		// 进行 bean 元素解析。
 		// <1> 如果解析成功，则返回 BeanDefinitionHolder 对象。而 BeanDefinitionHolder 为 维护 name 和 alias 的 BeanDefinition 对象
 		// 如果解析失败，则返回 null 。
+		// 将 <bean /> 节点中的信息提取出来，然后封装到一个 BeanDefinitionHolder 中，细节往下看
 		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
 		if (bdHolder != null) {
 			// <2> 进行自定义标签处理
