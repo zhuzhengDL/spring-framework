@@ -64,7 +64,7 @@ public abstract class AopProxyUtils {
 		return null;
 	}
 
-	/**
+	/** 确定给定 bean 实例的最终目标类
 	 * Determine the ultimate target class of the given bean instance, traversing
 	 * not only a top-level proxy but any number of nested proxies as well &mdash;
 	 * as long as possible without side effects, that is, just for singleton targets.

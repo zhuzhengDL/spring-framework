@@ -93,7 +93,8 @@ public class ProxyProcessorSupport extends ProxyConfig implements Ordered, BeanC
 	}
 
 
-	/**
+	/** 检查给定 bean 类上的接口并将它们应用到 {@link ProxyFactory}，如果合适的话。
+	 *
 	 * Check the interfaces on the given bean class and apply them to the {@link ProxyFactory},
 	 * if appropriate.
 	 * <p>Calls {@link #isConfigurationCallbackInterface} and {@link #isInternalLanguageInterface}

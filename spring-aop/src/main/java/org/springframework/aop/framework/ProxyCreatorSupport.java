@@ -40,7 +40,7 @@ public class ProxyCreatorSupport extends AdvisedSupport {
 	private boolean active = false;
 
 
-	/**
+	/** 创建一个新的 ProxyCreatorSupport 实例。
 	 * Create a new ProxyCreatorSupport instance.
 	 */
 	public ProxyCreatorSupport() {
@@ -102,6 +102,7 @@ public class ProxyCreatorSupport extends AdvisedSupport {
 		if (!this.active) {
 			activate();
 		}
+		//创建代理
 		return getAopProxyFactory().createAopProxy(this);
 	}
 

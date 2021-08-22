@@ -44,13 +44,18 @@ import org.springframework.lang.Nullable;
 @SuppressWarnings("serial")
 public final class ExposeInvocationInterceptor implements MethodInterceptor, PriorityOrdered, Serializable {
 
-	/** Singleton instance of this class. */
+	/** Singleton instance of this class.
+	 *  单例的// 创建 DefaultPointcutAdvisor 匿名对象
+	 * */
 	public static final ExposeInvocationInterceptor INSTANCE = new ExposeInvocationInterceptor();
 
 	/**
+	 * // 创建 DefaultPointcutAdvisor 匿名对象
+	 *
 	 * Singleton advisor for this class. Use in preference to INSTANCE when using
 	 * Spring AOP, as it prevents the need to create a new Advisor to wrap the instance.
 	 */
+
 	public static final Advisor ADVISOR = new DefaultPointcutAdvisor(INSTANCE) {
 		@Override
 		public String toString() {
@@ -82,7 +87,7 @@ public final class ExposeInvocationInterceptor implements MethodInterceptor, Pri
 	}
 
 
-	/**
+	/**   // 私有构造方法
 	 * Ensures that only the canonical instance can be created.
 	 */
 	private ExposeInvocationInterceptor() {
@@ -92,8 +97,10 @@ public final class ExposeInvocationInterceptor implements MethodInterceptor, Pri
 	@Nullable
 	public Object invoke(MethodInvocation mi) throws Throwable {
 		MethodInvocation oldInvocation = invocation.get();
+		// 将 mi 设置到 ThreadLocal 中
 		invocation.set(mi);
 		try {
+			// 调用下一个拦截器
 			return mi.proceed();
 		}
 		finally {

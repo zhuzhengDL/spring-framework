@@ -124,13 +124,20 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 	}
 
 	/**
+	 * //获取指定方法上的注解并使用 AspectJAnnotation 封装
+	 *
+	 * 查找并返回给定方法的第一个 AspectJ 注释
+	 *（无论如何<i>应该</i>只有一个......）。
+	 *
 	 * Find and return the first AspectJ annotation on the given method
 	 * (there <i>should</i> only be one anyway...).
 	 */
 	@SuppressWarnings("unchecked")
 	@Nullable
 	protected static AspectJAnnotation<?> findAspectJAnnotationOnMethod(Method method) {
+		//ASPECTJ_ANNOTATION_CLASSES ={Pointcut.class, Around.class, Before.class, After.class, AfterReturning.class, AfterThrowing.class}
 		for (Class<?> clazz : ASPECTJ_ANNOTATION_CLASSES) {
+			// 查找注解
 			AspectJAnnotation<?> foundAnnotation = findAnnotation(method, (Class<Annotation>) clazz);
 			if (foundAnnotation != null) {
 				return foundAnnotation;
@@ -246,7 +253,7 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 	}
 
 
-	/**
+	/** 获取
 	 * ParameterNameDiscoverer implementation that analyzes the arg names
 	 * specified at the AspectJ annotation level.
 	 */

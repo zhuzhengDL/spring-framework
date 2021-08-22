@@ -32,13 +32,13 @@ package org.springframework.aop;
  */
 public interface Pointcut {
 
-	/**
+	/**  返回一个类型过滤器
 	 * Return the ClassFilter for this pointcut.
 	 * @return the ClassFilter (never {@code null})
 	 */
 	ClassFilter getClassFilter();
 
-	/**
+	/** 返回一个方法匹配器
 	 * Return the MethodMatcher for this pointcut.
 	 * @return the MethodMatcher (never {@code null})
 	 */

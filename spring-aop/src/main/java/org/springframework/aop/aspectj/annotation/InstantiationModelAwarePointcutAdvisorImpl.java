@@ -107,9 +107,10 @@ final class InstantiationModelAwarePointcutAdvisorImpl
 			this.lazy = true;
 		}
 		else {
-			// A singleton aspect.
+			// A singleton aspect. 单例aspect
 			this.pointcut = this.declaredPointcut;
 			this.lazy = false;
+			// 按照注解解析 Advice
 			this.instantiatedAdvice = instantiateAdvice(this.declaredPointcut);
 		}
 	}

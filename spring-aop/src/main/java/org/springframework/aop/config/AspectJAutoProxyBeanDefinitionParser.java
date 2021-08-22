@@ -38,10 +38,24 @@ import org.springframework.lang.Nullable;
  */
 class AspectJAutoProxyBeanDefinitionParser implements BeanDefinitionParser {
 
+	/**
+	 * <aop:aspectj-autoproxy >
+	 * 		<aop:include name="xx"></aop:include>
+	 * </aop:aspectj-autoproxy>
+	 *
+	 *
+	 * @param element the element that is to be parsed into one or more {@link BeanDefinition BeanDefinitions}
+	 * @param parserContext the object encapsulating the current state of the parsing process;
+	 * provides access to a {@link org.springframework.beans.factory.support.BeanDefinitionRegistry}
+	 * @return
+	 */
 	@Override
 	@Nullable
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
+		//注册 AnnotationAwareAspectJAutoProxyCreator
 		AopNamespaceUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary(parserContext, element);
+		//对于<aop:aspectj-autoproxy> 子元素的处理  一般用不掉 忽略
+
 		extendBeanDefinition(element, parserContext);
 		return null;
 	}

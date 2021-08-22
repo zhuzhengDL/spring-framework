@@ -8,7 +8,9 @@
 
 	<bean id="counter" class="org.springframework.aop.aspectj.Counter"/>
 
-	<aop:aspectj-autoproxy/>
+	<aop:aspectj-autoproxy >
+		<aop:include name="xx"></aop:include>
+	</aop:aspectj-autoproxy>
 
 	<bean id="monitoringAspect" class="org.springframework.aop.aspectj.JoinPointMonitorAtAspectJAspect">
 		<property name="counter" ref="counter" />

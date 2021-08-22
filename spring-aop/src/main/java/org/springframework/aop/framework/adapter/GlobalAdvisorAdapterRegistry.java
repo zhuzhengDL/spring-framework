@@ -35,7 +35,7 @@ public final class GlobalAdvisorAdapterRegistry {
 	 */
 	private static AdvisorAdapterRegistry instance = new DefaultAdvisorAdapterRegistry();
 
-	/**
+	/**返回单例 {@link DefaultAdvisorAdapterRegistry} 实例。
 	 * Return the singleton {@link DefaultAdvisorAdapterRegistry} instance.
 	 */
 	public static AdvisorAdapterRegistry getInstance() {

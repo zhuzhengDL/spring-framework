@@ -55,7 +55,8 @@ import org.springframework.util.StopWatch;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
+/** AspectJ 自动代理的集成测试
+ *
  * Integration tests for AspectJ auto-proxying. Includes mixing with Spring AOP Advisors
  * to demonstrate that existing autoproxying contract is honoured.
  *

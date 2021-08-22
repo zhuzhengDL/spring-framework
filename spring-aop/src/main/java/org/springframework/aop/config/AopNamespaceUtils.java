@@ -71,21 +71,34 @@ public abstract class AopNamespaceUtils {
 		registerComponentIfNecessary(beanDefinition, parserContext);
 	}
 
-	public static void registerAspectJAnnotationAutoProxyCreatorIfNecessary(
+	/**
+	 * 注册 AnnotationAwareAspectJAutoProxyCreator
+	 * @param parserContext
+	 * @param sourceElement
+	 */
+	public static void  registerAspectJAnnotationAutoProxyCreatorIfNecessary(
 			ParserContext parserContext, Element sourceElement) {
-
+       //《1》注册 AnnotationAwareAspectJAutoProxyCreator
 		BeanDefinition beanDefinition = AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary(
 				parserContext.getRegistry(), parserContext.extractSource(sourceElement));
+		//《2》对于proxy-target-class 以及 expose-proxy 属性的处理
+		//<aop:aspectJ-autoproxy proxy-target-class= ” true ” />
 		useClassProxyingIfNecessary(parserContext.getRegistry(), sourceElement);
+		//《3》注册组件并通知，便于监听器进做进一步处理
 		registerComponentIfNecessary(beanDefinition, parserContext);
 	}
 
 	private static void useClassProxyingIfNecessary(BeanDefinitionRegistry registry, @Nullable Element sourceElement) {
 		if (sourceElement != null) {
+			//获取proxy-target-class属性值 并赋值到bean 定义中
+			//指明是否要创建基于子类的 (CGLIB) 代理而不是到标准的基于 Java 接口的代理
 			boolean proxyTargetClass = Boolean.parseBoolean(sourceElement.getAttribute(PROXY_TARGET_CLASS_ATTRIBUTE));
 			if (proxyTargetClass) {
 				AopConfigUtils.forceAutoProxyCreatorToUseClassProxying(registry);
 			}
+			//获取expose-proxy属性值 并赋值到bean 定义中
+			//<aop:aspectj-autoproxy expose-proxy= ” true ” />  暴露代理对象
+			//
 			boolean exposeProxy = Boolean.parseBoolean(sourceElement.getAttribute(EXPOSE_PROXY_ATTRIBUTE));
 			if (exposeProxy) {
 				AopConfigUtils.forceAutoProxyCreatorToExposeProxy(registry);

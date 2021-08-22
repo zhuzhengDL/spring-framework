@@ -22,6 +22,11 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 
 /**
+ * 根据给定的 @{@link EnableAspectJAutoProxy} 注释，
+ * 根据当前 {@link BeanDefinitionRegistry} 注册一个
+ * {@link org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator AnnotationAwareAspectJAutoProxyCreator}。
+ *
+ *
  * Registers an {@link org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator
  * AnnotationAwareAspectJAutoProxyCreator} against the current {@link BeanDefinitionRegistry}
  * as appropriate based on a given @{@link EnableAspectJAutoProxy} annotation.
@@ -42,15 +47,18 @@ class AspectJAutoProxyRegistrar implements ImportBeanDefinitionRegistrar {
 	public void registerBeanDefinitions(
 			AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
 
+		//注册 AnnotationAwareAspectJAutoProxyCreator  自动代理创建器
 		AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary(registry);
 
 		AnnotationAttributes enableAspectJAutoProxy =
 				AnnotationConfigUtils.attributesFor(importingClassMetadata, EnableAspectJAutoProxy.class);
 		if (enableAspectJAutoProxy != null) {
 			if (enableAspectJAutoProxy.getBoolean("proxyTargetClass")) {
+				//赋值proxyTargetClass属性 指明是否要创建基于子类的 (CGLIB) 代理而不是标准的基于 Java 接口的代理。
 				AopConfigUtils.forceAutoProxyCreatorToUseClassProxying(registry);
 			}
 			if (enableAspectJAutoProxy.getBoolean("exposeProxy")) {
+				//赋值exposeProxy属性 exposeProxy=true  暴露当前代理到 theadLocal中
 				AopConfigUtils.forceAutoProxyCreatorToExposeProxy(registry);
 			}
 		}

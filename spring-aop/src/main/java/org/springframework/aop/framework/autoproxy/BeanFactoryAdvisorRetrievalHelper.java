@@ -58,7 +58,8 @@ public class BeanFactoryAdvisorRetrievalHelper {
 	}
 
 
-	/**
+	/** 查找当前 bean 工厂中所有符合条件的 Advisor bean，忽略 FactoryBeans 并排除当前正在创建的 bean。
+	 *
 	 * Find all eligible Advisor beans in the current bean factory,
 	 * ignoring FactoryBeans and excluding beans that are currently in creation.
 	 * @return the list of {@link org.springframework.aop.Advisor} beans
@@ -66,10 +67,17 @@ public class BeanFactoryAdvisorRetrievalHelper {
 	 */
 	public List<Advisor> findAdvisorBeans() {
 		// Determine list of advisor bean names, if not cached already.
+
+		// cachedAdvisorBeanNames 是 advisor 名称的缓存
 		String[] advisorNames = this.cachedAdvisorBeanNames;
+		/*
+		 * 如果 cachedAdvisorBeanNames 为空，这里到容器中查找，
+		 * 并设置缓存，后续直接使用缓存即可
+		 */
 		if (advisorNames == null) {
 			// Do not initialize FactoryBeans here: We need to leave all regular beans
 			// uninitialized to let the auto-proxy creator apply to them!
+			// 从容器中查找 Advisor 类型 bean 的名称
 			advisorNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
 					this.beanFactory, Advisor.class, true, false);
 			this.cachedAdvisorBeanNames = advisorNames;
@@ -79,8 +87,10 @@ public class BeanFactoryAdvisorRetrievalHelper {
 		}
 
 		List<Advisor> advisors = new ArrayList<>();
+		// 遍历 advisorNames
 		for (String name : advisorNames) {
 			if (isEligibleBean(name)) {
+				// 忽略正在创建中的 advisor bean
 				if (this.beanFactory.isCurrentlyInCreation(name)) {
 					if (logger.isTraceEnabled()) {
 						logger.trace("Skipping currently created advisor '" + name + "'");
@@ -88,6 +98,10 @@ public class BeanFactoryAdvisorRetrievalHelper {
 				}
 				else {
 					try {
+						/*
+						 * 调用 getBean 方法从容器中获取名称为 name 的 bean，
+						 * 并将 bean 添加到 advisors 中
+						 */
 						advisors.add(this.beanFactory.getBean(name, Advisor.class));
 					}
 					catch (BeanCreationException ex) {
@@ -113,7 +127,8 @@ public class BeanFactoryAdvisorRetrievalHelper {
 		return advisors;
 	}
 
-	/**
+	/** 确定具有给定名称的方面 bean 是否合格。
+	 *
 	 * Determine whether the aspect bean with the given name is eligible.
 	 * <p>The default implementation always returns {@code true}.
 	 * @param beanName the name of the aspect bean

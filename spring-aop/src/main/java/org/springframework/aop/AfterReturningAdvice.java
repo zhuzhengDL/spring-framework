@@ -30,7 +30,7 @@ import org.springframework.lang.Nullable;
  */
 public interface AfterReturningAdvice extends AfterAdvice {
 
-	/**
+	/** 给定方法成功返回后的回调。
 	 * Callback after a given method successfully returned.
 	 * @param returnValue the value returned by the method, if any
 	 * @param method the method being invoked

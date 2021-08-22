@@ -944,8 +944,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
 				// 处理 FactoryBean
 				if (isFactoryBean(beanName)) {
-					// FactoryBean 的话，在 beanName 前面加上 ‘&’ 符号。再调用 getBean，getBean 方法别急
+					// FactoryBean 的话，在 beanName 前面加上 ‘&’ 符号。再调用 getBean方法，
 					Object bean = getBean(FACTORY_BEAN_PREFIX + beanName);
+					/**name前面加上 ‘&’ 符号后，此时getBean 是创建对应的FactoryBean返回,不会调用FactoryBean的getObject方法
+					 * @see org.springframework.beans.factory.support.AbstractBeanFactory#getObjectForBeanInstance(java.lang.Object, java.lang.String, java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition)
+					 */
 					if (bean instanceof FactoryBean) {
 						FactoryBean<?> factory = (FactoryBean<?>) bean;
 						boolean isEagerInit;

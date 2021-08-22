@@ -130,6 +130,10 @@ public class ProxyConfig implements Serializable {
 	}
 
 	/**
+	 * 设置是否应冻结此配置。
+	 * <p>当配置被冻结时，不能进行任何建议更改。这是
+	 * 对优化很有用，当我们不希望调用者这样做时很有用
+	 * 能够在投射到 Advised 后操作配置。
 	 * Set whether this config should be frozen.
 	 * <p>When a config is frozen, no advice changes can be made. This is
 	 * useful for optimization, and useful when we don't want callers to

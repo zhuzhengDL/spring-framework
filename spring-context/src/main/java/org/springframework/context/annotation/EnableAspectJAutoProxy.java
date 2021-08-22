@@ -123,16 +123,41 @@ import java.lang.annotation.Target;
 public @interface EnableAspectJAutoProxy {
 
 	/**
+	 * 指明是否要创建基于子类的 (CGLIB) 代理而不是
+	 * 到标准的基于 Java 接口的代理。默认值为 {@code false}。
+	 *
 	 * Indicate whether subclass-based (CGLIB) proxies are to be created as opposed
 	 * to standard Java interface-based proxies. The default is {@code false}.
 	 */
 	boolean proxyTargetClass() default false;
 
-	/**
+	/** 是否暴露代理对象
+	 * 指示代理应由 AOP 框架公开为 {@code ThreadLocal}
+	 * 通过 {@link org.springframework.aop.framework.AopContext} 类检索。
+	 * 默认关闭，即不保证 {@code AopContext} 访问会起作用。
+	 *
 	 * Indicate that the proxy should be exposed by the AOP framework as a {@code ThreadLocal}
 	 * for retrieval via the {@link org.springframework.aop.framework.AopContext} class.
 	 * Off by default, i.e. no guarantees that {@code AopContext} access will work.
 	 * @since 4.3.1
+	 *
+	 *
+	 * @Transactional (propagation = Propagation . REQUIRED)
+	 * public void a () {
+	 * this . b() ;
+	 * }
+	 * @Transactional (propagation = Propaga on REQUIRES_NEW)
+	 *  public void a () {
+	 * }
+	 *
+	 * 例如事务方法调用内部其他事务，
+	 * 此处的 this 指向目标对象，因此调用 th is.b （）将不会执行 务切面，即不 执行 务增强，
+	 * 因b方法的 务定义“ Transactiona l(propagat ion = Propagation.REQUIRES_ NEW）”将不会
+	 * 实施，为了解决这个问题，我们可以这样做
+	 *
+	 * exposeProxy =true  ==> <aop:aspectj-autoproxy expose-proxy= ” true ” />
+	 *
+	 * 然后将以上代码中的“this.b （）；”修改为 (AService) AopContext.currentProxy() ). b（） ；”即可
 	 */
 	boolean exposeProxy() default false;
 

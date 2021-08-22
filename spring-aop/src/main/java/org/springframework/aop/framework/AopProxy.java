@@ -31,7 +31,7 @@ import org.springframework.lang.Nullable;
  */
 public interface AopProxy {
 
-	/**
+	/** 创建一个新的代理对象。
 	 * Create a new proxy object.
 	 * <p>Uses the AopProxy's default class loader (if necessary for proxy creation):
 	 * usually, the thread context class loader.
@@ -40,7 +40,7 @@ public interface AopProxy {
 	 */
 	Object getProxy();
 
-	/**
+	/** 创建一个新的代理对象。
 	 * Create a new proxy object.
 	 * <p>Uses the given class loader (if necessary for proxy creation).
 	 * {@code null} will simply be passed down and thus lead to the low-level

@@ -25,7 +25,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.AfterAdvice;
 import org.springframework.lang.Nullable;
 
-/**
+/** Spring AOP advice在原来method.方法之后包装 AspectJ。
  * Spring AOP advice wrapping an AspectJ after advice method.
  *
  * @author Rod Johnson
@@ -46,9 +46,11 @@ public class AspectJAfterAdvice extends AbstractAspectJAdvice
 	@Nullable
 	public Object invoke(MethodInvocation mi) throws Throwable {
 		try {
+			// 调用 proceed
 			return mi.proceed();
 		}
 		finally {
+			//触发后置的advice 逻辑
 			invokeAdviceMethod(getJoinPointMatch(), null, null);
 		}
 	}
