@@ -43,7 +43,7 @@ import org.springframework.lang.Nullable;
  */
 public interface TransactionDefinition {
 
-	/**
+	/** 
 	 * Support a current transaction; create a new one if none exists.
 	 * Analogous to the EJB transaction attribute of the same name.
 	 * <p>This is typically the default setting of a transaction definition,
@@ -132,7 +132,8 @@ public interface TransactionDefinition {
 	int PROPAGATION_NESTED = 6;
 
 
-	/**
+	/**使用底层数据存储的默认隔离级别。所有其他级别对应于 JDBC 隔离级别。
+	 *
 	 * Use the default isolation level of the underlying datastore.
 	 * All other levels correspond to the JDBC isolation levels.
 	 * @see java.sql.Connection
@@ -185,13 +186,16 @@ public interface TransactionDefinition {
 
 
 	/**
+	 * 使用底层交易系统的默认超时时间，
+	 * 如果不支持超时，则无。
+	 *
 	 * Use the default timeout of the underlying transaction system,
 	 * or none if timeouts are not supported.
 	 */
 	int TIMEOUT_DEFAULT = -1;
 
 
-	/**
+	/** 返回事务的传播行为
 	 * Return the propagation behavior.
 	 * <p>Must return one of the {@code PROPAGATION_XXX} constants
 	 * defined on {@link TransactionDefinition this interface}.
@@ -204,7 +208,8 @@ public interface TransactionDefinition {
 		return PROPAGATION_REQUIRED;
 	}
 
-	/**
+	/** 返回隔离级别。
+	 *
 	 * Return the isolation level.
 	 * <p>Must return one of the {@code ISOLATION_XXX} constants defined on
 	 * {@link TransactionDefinition this interface}. Those constants are designed
@@ -226,7 +231,7 @@ public interface TransactionDefinition {
 		return ISOLATION_DEFAULT;
 	}
 
-	/**
+	/** 返回事务必须在多少秒内完成(返回事务超时间。)
 	 * Return the transaction timeout.
 	 * <p>Must return a number of seconds, or {@link #TIMEOUT_DEFAULT}.
 	 * <p>Exclusively designed for use with {@link #PROPAGATION_REQUIRED} or
@@ -241,7 +246,8 @@ public interface TransactionDefinition {
 		return TIMEOUT_DEFAULT;
 	}
 
-	/**
+	/** 返回是否为只读事务。
+	 *
 	 * Return whether to optimize as a read-only transaction.
 	 * <p>The read-only flag applies to any transaction context, whether backed
 	 * by an actual resource transaction ({@link #PROPAGATION_REQUIRED}/
@@ -262,7 +268,8 @@ public interface TransactionDefinition {
 		return false;
 	}
 
-	/**
+	/**返回事务名称
+	 *
 	 * Return the name of this transaction. Can be {@code null}.
 	 * <p>This will be used as the transaction name to be shown in a
 	 * transaction monitor, if applicable (for example, WebLogic's).

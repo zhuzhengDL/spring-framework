@@ -162,7 +162,7 @@ public abstract class DataSourceUtils {
 		return con;
 	}
 
-	/**
+	/** 使用给定的事务语义准备给定的 Connection。
 	 * Prepare the given Connection with the given transaction semantics.
 	 * @param con the Connection to prepare
 	 * @param definition the transaction definition to apply
@@ -180,6 +180,7 @@ public abstract class DataSourceUtils {
 
 		boolean debugEnabled = logger.isDebugEnabled();
 		// Set read-only flag.
+		//设置只读标识
 		if (definition != null && definition.isReadOnly()) {
 			try {
 				if (debugEnabled) {
@@ -200,7 +201,7 @@ public abstract class DataSourceUtils {
 				logger.debug("Could not set JDBC Connection read-only", ex);
 			}
 		}
-
+        //设置隔离级别
 		// Apply specific isolation level, if any.
 		Integer previousIsolationLevel = null;
 		if (definition != null && definition.getIsolationLevel() != TransactionDefinition.ISOLATION_DEFAULT) {

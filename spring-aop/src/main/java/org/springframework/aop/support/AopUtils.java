@@ -287,11 +287,13 @@ public abstract class AopUtils {
 	 * @return whether the pointcut can apply on any method
 	 */
 	public static boolean canApply(Advisor advisor, Class<?> targetClass, boolean hasIntroductions) {
+		//首先处理引介增强
 		if (advisor instanceof IntroductionAdvisor) {
 			/*
 			 * 从通知器中获取类型过滤器 ClassFilter，并调用 matchers 方法进行匹配。
 			 * ClassFilter 接口的实现类 AspectJExpressionPointcut 为例，该类的
-			 * 匹配工作由 AspectJ 表达式解析器负责，具体匹配细节这个就没法分析了，我
+			 * 匹配工作由 AspectJ 表达式解析器负责，
+			 * 具体匹配细节这个就没法分析了，我
 			 * AspectJ 表达式的工作流程不是很熟
 			 */
 			return ((IntroductionAdvisor) advisor).getClassFilter().matches(targetClass);
@@ -299,6 +301,7 @@ public abstract class AopUtils {
 		else if (advisor instanceof PointcutAdvisor) {
 			PointcutAdvisor pca = (PointcutAdvisor) advisor;
 			// 对于普通类型的通知器，这里继续调用重载方法进行筛选
+			//例如 BeanFactoryTransactionAttributeSourceAdvisor
 			return canApply(pca.getPointcut(), targetClass, hasIntroductions);
 		}
 		else {

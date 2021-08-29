@@ -39,8 +39,14 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  */
 public class TxNamespaceHandler extends NamespaceHandlerSupport {
 
+	/** <tx:annotation-driven transaction-manager="transactionManager" />
+	 * 事务管理器属性字段名称
+	 */
 	static final String TRANSACTION_MANAGER_ATTRIBUTE = "transaction-manager";
 
+	/**
+	 * 默认的事务管理器名称
+	 */
 	static final String DEFAULT_TRANSACTION_MANAGER_BEAN_NAME = "transactionManager";
 
 
@@ -52,7 +58,17 @@ public class TxNamespaceHandler extends NamespaceHandlerSupport {
 
 	@Override
 	public void init() {
+		//解析<tx:advice id="txAdvice">
+		//		<tx:attributes>
+		//			<tx:method name="get*" timeout="5" read-only="true"/>
+		//			<tx:method name="set*"/>
+		//			<tx:method name="exceptional"/>
+		//		</tx:attributes>
+		//	</tx:advice>
 		registerBeanDefinitionParser("advice", new TxAdviceBeanDefinitionParser());
+		/**
+		 * 解析 <tx:annotation-driven transaction-manager="transactionManager" />
+		 */
 		registerBeanDefinitionParser("annotation-driven", new AnnotationDrivenBeanDefinitionParser());
 		registerBeanDefinitionParser("jta-transaction-manager", new JtaTransactionManagerBeanDefinitionParser());
 	}

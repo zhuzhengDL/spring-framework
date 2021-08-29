@@ -38,7 +38,7 @@ import java.io.Flushable;
  */
 public interface TransactionStatus extends TransactionExecution, SavepointManager, Flushable {
 
-	/**
+	/**  是否有恢复点
 	 * Return whether this transaction internally carries a savepoint,
 	 * that is, has been created as nested transaction based on a savepoint.
 	 * <p>This method is mainly here for diagnostic purposes, alongside
@@ -51,7 +51,7 @@ public interface TransactionStatus extends TransactionExecution, SavepointManage
 	 */
 	boolean hasSavepoint();
 
-	/**
+	/**刷新session
 	 * Flush the underlying session to the datastore, if applicable:
 	 * for example, all affected Hibernate/JPA sessions.
 	 * <p>This is effectively just a hint and may be a no-op if the underlying
