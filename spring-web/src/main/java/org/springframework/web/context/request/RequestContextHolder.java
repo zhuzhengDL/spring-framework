@@ -95,7 +95,7 @@ public abstract class RequestContextHolder  {
 		}
 	}
 
-	/**
+	/** 返回当前绑定到线程的 RequestAttributes。
 	 * Return the RequestAttributes currently bound to the thread.
 	 * @return the RequestAttributes currently bound to the thread,
 	 * or {@code null} if none bound

@@ -321,7 +321,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 	}
 
 
-	/**
+	/** 执行事务方法
 	 * General delegate for around-advice-based subclasses, delegating to several other template
 	 * methods on this class. Able to handle {@link CallbackPreferringPlatformTransactionManager}
 	 * as well as regular {@link PlatformTransactionManager} implementations and

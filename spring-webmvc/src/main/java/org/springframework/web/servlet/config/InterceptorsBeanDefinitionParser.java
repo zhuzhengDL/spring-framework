@@ -48,7 +48,7 @@ class InterceptorsBeanDefinitionParser implements BeanDefinitionParser {
 				new CompositeComponentDefinition(element.getTagName(), context.extractSource(element)));
 
 		RuntimeBeanReference pathMatcherRef = null;
-		if (element.hasAttribute("path-matcher")) {
+		if (element.hasAttribute("path-matcher")) {//指定了路径匹配器
 			pathMatcherRef = new RuntimeBeanReference(element.getAttribute("path-matcher"));
 		}
 
@@ -62,23 +62,26 @@ class InterceptorsBeanDefinitionParser implements BeanDefinitionParser {
 			ManagedList<String> excludePatterns = null;
 			Object interceptorBean;
 			if ("interceptor".equals(interceptor.getLocalName())) {
-				includePatterns = getIncludePatterns(interceptor, "mapping");
-				excludePatterns = getIncludePatterns(interceptor, "exclude-mapping");
+				includePatterns = getIncludePatterns(interceptor, "mapping"); //匹配的路径
+				excludePatterns = getIncludePatterns(interceptor, "exclude-mapping");  //忽略的路径
 				Element beanElem = DomUtils.getChildElementsByTagName(interceptor, "bean", "ref").get(0);
-				interceptorBean = context.getDelegate().parsePropertySubElement(beanElem, null);
+				interceptorBean = context.getDelegate().parsePropertySubElement(beanElem, null);//拦截器
 			}
 			else {
-				interceptorBean = context.getDelegate().parsePropertySubElement(interceptor, null);
+				interceptorBean = context.getDelegate().parsePropertySubElement(interceptor, null); ;//拦截器
+				///匹配的路径 为空，  默认全局拦截器
 			}
 			mappedInterceptorDef.getConstructorArgumentValues().addIndexedArgumentValue(0, includePatterns);
 			mappedInterceptorDef.getConstructorArgumentValues().addIndexedArgumentValue(1, excludePatterns);
 			mappedInterceptorDef.getConstructorArgumentValues().addIndexedArgumentValue(2, interceptorBean);
 
 			if (pathMatcherRef != null) {
+				//指定路径匹配器
 				mappedInterceptorDef.getPropertyValues().add("pathMatcher", pathMatcherRef);
 			}
-
+			//注册到容器
 			String beanName = context.getReaderContext().registerWithGeneratedName(mappedInterceptorDef);
+			//注册事件
 			context.registerComponent(new BeanComponentDefinition(mappedInterceptorDef, beanName));
 		}
 

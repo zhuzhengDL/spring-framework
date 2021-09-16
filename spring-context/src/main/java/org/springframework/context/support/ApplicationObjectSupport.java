@@ -149,7 +149,7 @@ public abstract class ApplicationObjectSupport implements ApplicationContextAwar
 		return this.applicationContext;
 	}
 
-	/**
+	/** 获取实际使用的ApplicationContext。
 	 * Obtain the ApplicationContext for actual use.
 	 * @return the ApplicationContext (never {@code null})
 	 * @throws IllegalStateException in case of no ApplicationContext set

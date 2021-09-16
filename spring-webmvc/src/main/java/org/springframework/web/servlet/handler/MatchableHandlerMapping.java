@@ -22,7 +22,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.pattern.PathPatternParser;
 
-/**
+/** 可匹配处理程序映射
+ *
  * Additional interface that a {@link HandlerMapping} can implement to expose
  * a request matching API aligned with its internal request matching
  * configuration and implementation.
@@ -32,7 +33,6 @@ import org.springframework.web.util.pattern.PathPatternParser;
  * @see HandlerMappingIntrospector
  */
 public interface MatchableHandlerMapping extends HandlerMapping {
-
 	/**
 	 * Return the parser of this {@code HandlerMapping}, if configured in which
 	 * case pre-parsed patterns are used.
@@ -43,7 +43,8 @@ public interface MatchableHandlerMapping extends HandlerMapping {
 		return null;
 	}
 
-	/**
+	/** 判断请求和指定 `pattern` 路径是否匹配的接口方法
+	 *
 	 * Determine whether the request matches the given pattern. Use this method
 	 * when {@link #getPatternParser()} returns {@code null} which means that the
 	 * {@code HandlerMapping} is using String pattern matching.
@@ -53,5 +54,4 @@ public interface MatchableHandlerMapping extends HandlerMapping {
 	 */
 	@Nullable
 	RequestMatchResult match(HttpServletRequest request, String pattern);
-
 }

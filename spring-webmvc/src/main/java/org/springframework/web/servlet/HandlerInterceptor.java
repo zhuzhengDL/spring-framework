@@ -75,14 +75,7 @@ import org.springframework.web.method.HandlerMethod;
 public interface HandlerInterceptor {
 
 	/**
-	 * Intercept the execution of a handler. Called after HandlerMapping determined
-	 * an appropriate handler object, but before HandlerAdapter invokes the handler.
-	 * <p>DispatcherServlet processes a handler in an execution chain, consisting
-	 * of any number of interceptors, with the handler itself at the end.
-	 * With this method, each interceptor can decide to abort the execution chain,
-	 * typically sending an HTTP error or writing a custom response.
-	 * <p><strong>Note:</strong> special considerations apply for asynchronous
-	 * request processing. For more details see
+	 * 拦截处理器，在 {@link HandlerAdapter#handle(HttpServletRequest, HttpServletResponse, Object)} 执行之前
 	 * {@link org.springframework.web.servlet.AsyncHandlerInterceptor}.
 	 * <p>The default implementation returns {@code true}.
 	 * @param request current HTTP request
@@ -100,15 +93,8 @@ public interface HandlerInterceptor {
 	}
 
 	/**
-	 * Intercept the execution of a handler. Called after HandlerAdapter actually
-	 * invoked the handler, but before the DispatcherServlet renders the view.
-	 * Can expose additional model objects to the view via the given ModelAndView.
-	 * <p>DispatcherServlet processes a handler in an execution chain, consisting
-	 * of any number of interceptors, with the handler itself at the end.
-	 * With this method, each interceptor can post-process an execution,
-	 * getting applied in inverse order of the execution chain.
-	 * <p><strong>Note:</strong> special considerations apply for asynchronous
-	 * request processing. For more details see
+	 * 拦截处理器，在 {@link HandlerAdapter#handle(HttpServletRequest, HttpServletResponse, Object)} 执行成功之后
+	 *
 	 * {@link org.springframework.web.servlet.AsyncHandlerInterceptor}.
 	 * <p>The default implementation is empty.
 	 * @param request current HTTP request
@@ -124,6 +110,9 @@ public interface HandlerInterceptor {
 	}
 
 	/**
+	 * 拦截处理器，在 {@link HandlerAdapter} 执行完之后，无论成功还是失败
+	 * 并且，只有 {@link #preHandle(HttpServletRequest, HttpServletResponse, Object)} 执行之后，才会被执行
+	 *
 	 * Callback after completion of request processing, that is, after rendering
 	 * the view. Will be called on any outcome of handler execution, thus allows
 	 * for proper resource cleanup.

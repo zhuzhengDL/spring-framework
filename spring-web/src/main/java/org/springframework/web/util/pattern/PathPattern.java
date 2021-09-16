@@ -175,7 +175,8 @@ public class PathPattern implements Comparable<PathPattern> {
 	}
 
 
-	/**
+	/** 返回被解析以创建此 PathPattern 的原始字符串。(原始uri路径)
+	 *
 	 * Return the original String that was parsed to create this PathPattern.
 	 */
 	public String getPatternString() {

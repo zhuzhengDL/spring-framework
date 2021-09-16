@@ -58,20 +58,44 @@ import org.springframework.web.util.pattern.PatternParseException;
  * @author Rossen Stoyanchev
  * @author Brian Clozel
  * @since 3.0
+ *
+ * <mvc:interceptors>
+ *     <mvc:interceptor>
+ *         <mvc:mapping path="/interceptor/**" />  //includePatterns
+ *         <mvc:exclude-mapping path="/interceptor/b/*" />  //excludePatterns
+ *         <bean class="com.elim.learn.spring.mvc.interceptor.MyInterceptor" />   //interceptor
+ *     </mvc:interceptor>
+ * </mvc:interceptors>
+ *
  */
 public final class MappedInterceptor implements HandlerInterceptor {
 
+	/**
+	 * 默认路径匹配器
+	 */
 	private static PathMatcher defaultPathMatcher = new AntPathMatcher();
 
 
+	/**
+	 * 匹配的路径
+	 */
 	@Nullable
 	private final PatternAdapter[] includePatterns;
 
+	/**
+	 * 不匹配的路径
+	 */
 	@Nullable
 	private final PatternAdapter[] excludePatterns;
 
+	/**
+	 *  路径匹配器
+	 */
 	private PathMatcher pathMatcher = defaultPathMatcher;
 
+	/**
+	 * HandlerInterceptor 拦截器对象
+	 */
 	private final HandlerInterceptor interceptor;
 
 
@@ -176,7 +200,7 @@ public final class MappedInterceptor implements HandlerInterceptor {
 	}
 
 
-	/**
+	/** 检查此拦截器是否映射到请求。
 	 * Check whether this interceptor is mapped to the request.
 	 * <p>The request mapping path is expected to have been resolved externally.
 	 * See also class-level Javadoc.
@@ -189,6 +213,7 @@ public final class MappedInterceptor implements HandlerInterceptor {
 			path = path.toString();
 		}
 		boolean isPathContainer = (path instanceof PathContainer);
+		// 匹配需要排除的路径
 		if (!ObjectUtils.isEmpty(this.excludePatterns)) {
 			for (PatternAdapter adapter : this.excludePatterns) {
 				if (adapter.match(path, isPathContainer, this.pathMatcher)) {
@@ -196,11 +221,13 @@ public final class MappedInterceptor implements HandlerInterceptor {
 				}
 			}
 		}
+		// 特殊，如果包含为空，则默认就是包含（拦截所有）
 		if (ObjectUtils.isEmpty(this.includePatterns)) {
 			return true;
 		}
+		// 后包含
 		for (PatternAdapter adapter : this.includePatterns) {
-			if (adapter.match(path, isPathContainer, this.pathMatcher)) {
+			if (adapter.match(path, isPathContainer, this.pathMatcher)) { // 匹配
 				return true;
 			}
 		}

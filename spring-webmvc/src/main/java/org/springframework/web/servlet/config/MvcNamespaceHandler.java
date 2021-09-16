@@ -33,7 +33,9 @@ public class MvcNamespaceHandler extends NamespaceHandlerSupport {
 	public void init() {
 		registerBeanDefinitionParser("annotation-driven", new AnnotationDrivenBeanDefinitionParser());
 		registerBeanDefinitionParser("default-servlet-handler", new DefaultServletHandlerBeanDefinitionParser());
+		//拦截器解析
 		registerBeanDefinitionParser("interceptors", new InterceptorsBeanDefinitionParser());
+
 		registerBeanDefinitionParser("resources", new ResourcesBeanDefinitionParser());
 		registerBeanDefinitionParser("view-controller", new ViewControllerBeanDefinitionParser());
 		registerBeanDefinitionParser("redirect-view-controller", new ViewControllerBeanDefinitionParser());

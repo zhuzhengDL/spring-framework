@@ -887,13 +887,16 @@ public abstract class ClassUtils {
 		return getUserClass(instance.getClass());
 	}
 
-	/**
+	/**返回给定类的用户定义类：通常只是给定的
+	 类，但如果是 CGLIB 生成的子类，则为原始类。
+
 	 * Return the user-defined class for the given class: usually simply the given
 	 * class, but the original class in case of a CGLIB-generated subclass.
 	 * @param clazz the class to check
 	 * @return the user-defined class
 	 */
 	public static Class<?> getUserClass(Class<?> clazz) {
+		// 如果 CG_CLASS 代理类，则获取其父类
 		if (clazz.getName().contains(CGLIB_CLASS_SEPARATOR)) {
 			Class<?> superclass = clazz.getSuperclass();
 			if (superclass != null && superclass != Object.class) {

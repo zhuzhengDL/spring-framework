@@ -62,6 +62,7 @@ import org.springframework.web.server.ServerWebExchange;
  * @since 5.0
  * @param <T> the mapping for a {@link HandlerMethod} containing the conditions
  * needed to match the handler method to an incoming request.
+ *           {@link HandlerMethod} 的映射包含将处理程序方法与传入请求匹配所需的条件。
  */
 public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMapping implements InitializingBean {
 
@@ -167,7 +168,8 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		}
 	}
 
-	/**
+	/** 扫描 ApplicationContext 中的 bean，检测和注册处理程序方法。
+	 *
 	 * Scan beans in the ApplicationContext, detect and register handler methods.
 	 * @see #isHandler(Class)
 	 * @see #getMappingForMethod(Method, Class)
@@ -196,7 +198,8 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		handlerMethodsInitialized(getHandlerMethods());
 	}
 
-	/**
+	/** 在处理程序中查找处理程序方法。
+	 *
 	 * Look for handler methods in a handler.
 	 * @param handler the bean name of a handler or a handler instance
 	 */

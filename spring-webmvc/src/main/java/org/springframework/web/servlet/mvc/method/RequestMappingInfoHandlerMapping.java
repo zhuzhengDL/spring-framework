@@ -84,7 +84,8 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 	}
 
 
-	/**
+	/** 获取与提供的 {@link RequestMappingInfo} 关联的 URL 路径模式。
+	 *
 	 * Get the URL path patterns associated with the supplied {@link RequestMappingInfo}.
 	 */
 	@Override
@@ -129,7 +130,9 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 		}
 	}
 
-	/**
+	/** 在请求中暴露 URI 模板变量、矩阵变量和可生产媒体类型。
+	 * 主要设置一些属性到请求中
+	 *
 	 * Expose URI template variables, matrix variables, and producible media types in the request.
 	 * @see HandlerMapping#URI_TEMPLATE_VARIABLES_ATTRIBUTE
 	 * @see HandlerMapping#MATRIX_VARIABLES_ATTRIBUTE
@@ -146,7 +149,7 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 		else {
 			extractMatchDetails((PatternsRequestCondition) condition, lookupPath, request);
 		}
-
+		// 设置 PRODUCIBLE_MEDIA_TYPES_ATTRIBUTE 属性，到请求中
 		if (!info.getProducesCondition().getProducibleMediaTypes().isEmpty()) {
 			Set<MediaType> mediaTypes = info.getProducesCondition().getProducibleMediaTypes();
 			request.setAttribute(PRODUCIBLE_MEDIA_TYPES_ATTRIBUTE, mediaTypes);
@@ -177,21 +180,23 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 
 	private void extractMatchDetails(
 			PatternsRequestCondition condition, String lookupPath, HttpServletRequest request) {
-
-		String bestPattern;
+      // 获得 bestPattern 和 uriVariables
+		String bestPattern;// 最佳路径
 		Map<String, String> uriVariables;
-		if (condition.isEmptyPathMapping()) {
+		if (condition.isEmptyPathMapping()) { // 路径上的变量集合
 			bestPattern = lookupPath;
 			uriVariables = Collections.emptyMap();
 		}
 		else {
 			bestPattern = condition.getPatterns().iterator().next();
 			uriVariables = getPathMatcher().extractUriTemplateVariables(bestPattern, lookupPath);
+			// 设置 MATRIX_VARIABLES_ATTRIBUTE 属性，到请求中
 			if (!getUrlPathHelper().shouldRemoveSemicolonContent()) {
 				request.setAttribute(MATRIX_VARIABLES_ATTRIBUTE, extractMatrixVariables(request, uriVariables));
 			}
 			uriVariables = getUrlPathHelper().decodePathVariables(request, uriVariables);
 		}
+		// 设置 URI_TEMPLATE_VARIABLES_ATTRIBUTE 属性，到请求中
 		request.setAttribute(BEST_MATCHING_PATTERN_ATTRIBUTE, bestPattern);
 		request.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, uriVariables);
 	}
@@ -237,12 +242,12 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 	@Override
 	protected HandlerMethod handleNoMatch(
 			Set<RequestMappingInfo> infos, String lookupPath, HttpServletRequest request) throws ServletException {
-
+		// <1> 创建 PartialMatchHelper 对象，解析可能的错误
 		PartialMatchHelper helper = new PartialMatchHelper(infos, request);
 		if (helper.isEmpty()) {
 			return null;
 		}
-
+        // <2> 方法错误
 		if (helper.hasMethodsMismatch()) {
 			Set<String> methods = helper.getAllowedMethods();
 			if (HttpMethod.OPTIONS.matches(request.getMethod())) {
@@ -252,7 +257,7 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 			}
 			throw new HttpRequestMethodNotSupportedException(request.getMethod(), methods);
 		}
-
+		// 可消费的 Content-Type 错误
 		if (helper.hasConsumesMismatch()) {
 			Set<MediaType> mediaTypes = helper.getConsumableMediaTypes();
 			MediaType contentType = null;
@@ -266,12 +271,12 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 			}
 			throw new HttpMediaTypeNotSupportedException(contentType, new ArrayList<>(mediaTypes));
 		}
-
+		// 可生产的 Content-Type 错误
 		if (helper.hasProducesMismatch()) {
 			Set<MediaType> mediaTypes = helper.getProducibleMediaTypes();
 			throw new HttpMediaTypeNotAcceptableException(new ArrayList<>(mediaTypes));
 		}
-
+		// <5> 参数错误
 		if (helper.hasParamsMismatch()) {
 			List<String[]> conditions = helper.getParamConditions();
 			throw new UnsatisfiedServletRequestParameterException(conditions, request.getParameterMap());

@@ -6,5 +6,12 @@
 		http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
 	<mvc:annotation-driven />
+	<mvc:interceptors path-matcher="ss">
+		<mvc:interceptor>
+			<mvc:mapping path="ss"/>
+			<mvc:exclude-mapping path=""/>
+			<bean></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
 
 </beans>

@@ -56,14 +56,18 @@ import org.springframework.lang.Nullable;
  */
 public interface HandlerMapping {
 
-	/**
+	/** 包含最佳匹配模式的映射处理程序的 {@link HttpServletRequest} 属性的名称。
+	 *
 	 * Name of the {@link HttpServletRequest} attribute that contains the mapped
 	 * handler for the best matching pattern.
 	 * @since 4.3.21
 	 */
 	String BEST_MATCHING_HANDLER_ATTRIBUTE = HandlerMapping.class.getName() + ".bestMatchingHandler";
 
-	/**
+	/** {@link HttpServletRequest} 属性的名称，包含用于查找匹配处理程序的路径，这取决于配置的
+	 {@link org.springframework.web.util.UrlPathHelper} 可能是完整路径
+	 或没有上下文路径，解码与否等。
+
 	 * Name of the {@link HttpServletRequest} attribute that contains the path
 	 * used to look up the matching handler, which depending on the configured
 	 * {@link org.springframework.web.util.UrlPathHelper} could be the full path
@@ -78,7 +82,7 @@ public interface HandlerMapping {
 	@Deprecated
 	String LOOKUP_PATH = HandlerMapping.class.getName() + ".lookupPath";
 
-	/**
+	/** {@link HttpServletRequest} 属性的名称，包含处理程序映射中的路径（如果模式匹配）或完整的相关 URI（通常在 DispatcherServlet 的映射中）。
 	 * Name of the {@link HttpServletRequest} attribute that contains the path
 	 * within the handler mapping, in case of a pattern match, or the full
 	 * relevant URI (typically within the DispatcherServlet's mapping) else.
@@ -152,7 +156,7 @@ public interface HandlerMapping {
 		return false;
 	}
 
-	/**
+	/** 获得请求对应的处理器和拦截器们
 	 * Return a handler and any interceptors for this request. The choice may be made
 	 * on request URL, session state, or any factor the implementing class chooses.
 	 * <p>The returned HandlerExecutionChain contains a handler Object, rather than

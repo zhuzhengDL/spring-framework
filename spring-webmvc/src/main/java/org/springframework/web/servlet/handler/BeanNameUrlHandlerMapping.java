@@ -50,20 +50,24 @@ import org.springframework.util.StringUtils;
 public class BeanNameUrlHandlerMapping extends AbstractDetectingUrlHandlerMapping {
 
 	/**
+	 * 检查是否bean的名字是否是/ 开头，如果是 就当成 url对应的一个处理器（controller）
 	 * Checks name and aliases of the given bean for URLs, starting with "/".
 	 */
 	@Override
 	protected String[] determineUrlsForHandler(String beanName) {
 		List<String> urls = new ArrayList<>();
+		// 如果是以 / 开头，添加到 urls
 		if (beanName.startsWith("/")) {
 			urls.add(beanName);
 		}
 		String[] aliases = obtainApplicationContext().getAliases(beanName);
+		// 获得 beanName 的别名们，如果以 / 开头，则添加到 urls
 		for (String alias : aliases) {
 			if (alias.startsWith("/")) {
 				urls.add(alias);
 			}
 		}
+		// 返回
 		return StringUtils.toStringArray(urls);
 	}
 

@@ -54,7 +54,9 @@ public final class RequestMethodsRequestCondition extends AbstractRequestConditi
 		}
 	}
 
-
+	/**
+	 * RequestMethod 集合
+	 */
 	private final Set<RequestMethod> methods;
 
 
@@ -128,7 +130,7 @@ public final class RequestMethodsRequestCondition extends AbstractRequestConditi
 		if (CorsUtils.isPreFlightRequest(request)) {
 			return matchPreFlight(request);
 		}
-
+		// 空的情况下，就返回自身 例如：@RequestMapping(value = "user/login")
 		if (getMethods().isEmpty()) {
 			if (RequestMethod.OPTIONS.name().equals(request.getMethod()) &&
 					!DispatcherType.ERROR.equals(request.getDispatcherType())) {
@@ -137,7 +139,7 @@ public final class RequestMethodsRequestCondition extends AbstractRequestConditi
 			}
 			return this;
 		}
-
+		// 非空，逐个匹配
 		return matchRequestMethod(request.getMethod());
 	}
 

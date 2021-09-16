@@ -51,15 +51,26 @@ public class PatternsRequestCondition extends AbstractRequestCondition<PatternsR
 
 	private final static Set<String> EMPTY_PATH_PATTERN = Collections.singleton("");
 
-
+	/**
+	 * 请求路径
+	 */
 	private final Set<String> patterns;
 
+	/**
+	 * 路径匹配器
+	 */
 	private final PathMatcher pathMatcher;
 
+	/**
+	 * 是否使用后缀匹配
+	 */
 	private final boolean useSuffixPatternMatch;
 
 	private final boolean useTrailingSlashMatch;
 
+	/**
+	 * 请求路径拓展信息
+	 */
 	private final List<String> fileExtensions = new ArrayList<>();
 
 
@@ -156,6 +167,7 @@ public class PatternsRequestCondition extends AbstractRequestCondition<PatternsR
 		}
 		Set<String> result = new LinkedHashSet<>(patterns.length);
 		for (String pattern : patterns) {
+			//如果路径不是以/开头 自动加上
 			if (StringUtils.hasLength(pattern) && !pattern.startsWith("/")) {
 				pattern = "/" + pattern;
 			}

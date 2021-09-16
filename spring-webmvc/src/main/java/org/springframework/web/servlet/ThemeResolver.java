@@ -48,7 +48,7 @@ import org.springframework.lang.Nullable;
  */
 public interface ThemeResolver {
 
-	/**
+	/** 从请求中，解析出使用的主题。例如，从请求头 User-Agent ，判断使用 PC 端，还是移动端的主题
 	 * Resolve the current theme name via the given request.
 	 * Should return a default theme as fallback in any case.
 	 * @param request the request to be used for resolution
@@ -56,7 +56,7 @@ public interface ThemeResolver {
 	 */
 	String resolveThemeName(HttpServletRequest request);
 
-	/**
+	/**  设置请求，所使用的主题。
 	 * Set the current theme name to the given one.
 	 * @param request the request to be used for theme name modification
 	 * @param response the response to be used for theme name modification
