@@ -40,6 +40,7 @@ public abstract class AbstractHandlerMethodAdapter extends WebContentGenerator i
 
 	public AbstractHandlerMethodAdapter() {
 		// no restriction of HTTP methods by default
+		//默认不限制 HTTP 方法
 		super(false);
 	}
 
@@ -69,14 +70,15 @@ public abstract class AbstractHandlerMethodAdapter extends WebContentGenerator i
 		return (handler instanceof HandlerMethod && supportsInternal((HandlerMethod) handler));
 	}
 
-	/**
+	/** 给定一个处理程序方法，返回此适配器是否可以支持它。
 	 * Given a handler method, return whether or not this adapter can support it.
 	 * @param handlerMethod the handler method to check
 	 * @return whether or not this adapter can adapt the given method
 	 */
 	protected abstract boolean supportsInternal(HandlerMethod handlerMethod);
 
-	/**
+	/** 此实现期望处理程序是 {@link HandlerMethod}。就是Controller里面的对应的某个方法
+	 *
 	 * This implementation expects the handler to be an {@link HandlerMethod}.
 	 */
 	@Override
@@ -87,7 +89,8 @@ public abstract class AbstractHandlerMethodAdapter extends WebContentGenerator i
 		return handleInternal(request, response, (HandlerMethod) handler);
 	}
 
-	/**
+	/** 使用给定的处理程序方法来处理请求。
+	 *
 	 * Use the given handler method to handle the request.
 	 * @param request current HTTP request
 	 * @param response current HTTP response

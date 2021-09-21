@@ -133,15 +133,17 @@ public class InvocableHandlerMethod extends HandlerMethod {
 	@Nullable
 	public Object invokeForRequest(NativeWebRequest request, @Nullable ModelAndViewContainer mavContainer,
 			Object... providedArgs) throws Exception {
-
+		// <1> 解析参数
 		Object[] args = getMethodArgumentValues(request, mavContainer, providedArgs);
 		if (logger.isTraceEnabled()) {
 			logger.trace("Arguments: " + Arrays.toString(args));
 		}
+		// 《2》执行调用
 		return doInvoke(args);
 	}
 
-	/**
+	/** 获取当前请求的方法参数值，检查提供的参数值并回退到配置的参数解析器。
+	 *
 	 * Get the method argument values for the current request, checking the provided
 	 * argument values and falling back to the configured argument resolvers.
 	 * <p>The resulting array will be passed into {@link #doInvoke}.
@@ -149,29 +151,35 @@ public class InvocableHandlerMethod extends HandlerMethod {
 	 */
 	protected Object[] getMethodArgumentValues(NativeWebRequest request, @Nullable ModelAndViewContainer mavContainer,
 			Object... providedArgs) throws Exception {
-
+		// 方法的参数信息的数组
 		MethodParameter[] parameters = getMethodParameters();
 		if (ObjectUtils.isEmpty(parameters)) {
 			return EMPTY_ARGS;
 		}
-
+		// 解析后的参数结果数组
 		Object[] args = new Object[parameters.length];
+
+		// 遍历，开始解析
 		for (int i = 0; i < parameters.length; i++) {
 			MethodParameter parameter = parameters[i];
 			parameter.initParameterNameDiscovery(this.parameterNameDiscoverer);
+			// <1> 先从 providedArgs 中获得参数。如果获得到，则进入下一个参数的解析
 			args[i] = findProvidedArgument(parameter, providedArgs);
 			if (args[i] != null) {
 				continue;
 			}
+			// <2> 判断 argumentResolvers 是否支持当前的参数解析
 			if (!this.resolvers.supportsParameter(parameter)) {
 				throw new IllegalStateException(formatArgumentError(parameter, "No suitable resolver"));
 			}
 			try {
+				// 执行解析。解析成功后，则进入下一个参数的解析
 				args[i] = this.resolvers.resolveArgument(parameter, mavContainer, request, this.dataBinderFactory);
 			}
 			catch (Exception ex) {
 				// Leave stack trace for later, exception may actually be resolved and handled...
 				if (logger.isDebugEnabled()) {
+					// 解析失败，打印日志，并抛出异常
 					String exMsg = ex.getMessage();
 					if (exMsg != null && !exMsg.contains(parameter.getExecutable().toGenericString())) {
 						logger.debug(formatArgumentError(parameter, exMsg));
@@ -180,20 +188,23 @@ public class InvocableHandlerMethod extends HandlerMethod {
 				throw ex;
 			}
 		}
+		// 返回结果
 		return args;
 	}
 
-	/**
+	/** 使用给定的参数值调用处理程序方法。
 	 * Invoke the handler method with the given argument values.
 	 */
 	@Nullable
 	protected Object doInvoke(Object... args) throws Exception {
 		Method method = getBridgedMethod();
+		// <z1> 设置方法为可访问
 		ReflectionUtils.makeAccessible(method);
 		try {
 			if (KotlinDetector.isSuspendingFunction(method)) {
 				return CoroutinesUtils.invokeSuspendingFunction(method, getBean(), args);
 			}
+			// <z2> 执行调用
 			return method.invoke(getBean(), args);
 		}
 		catch (IllegalArgumentException ex) {

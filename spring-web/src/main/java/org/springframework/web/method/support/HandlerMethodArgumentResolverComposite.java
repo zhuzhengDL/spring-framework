@@ -38,8 +38,14 @@ import org.springframework.web.context.request.NativeWebRequest;
  */
 public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgumentResolver {
 
+	/**
+	 *  HandlerMethodArgumentResolver 数组
+	 */
 	private final List<HandlerMethodArgumentResolver> argumentResolvers = new ArrayList<>();
 
+	/**
+	 * MethodParameter 与 HandlerMethodArgumentResolver 的映射，作为缓存。
+	 */
 	private final Map<MethodParameter, HandlerMethodArgumentResolver> argumentResolverCache =
 			new ConcurrentHashMap<>(256);
 
@@ -102,7 +108,7 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 		return getArgumentResolver(parameter) != null;
 	}
 
-	/**
+	/** 执行解析参数
 	 * Iterate over registered
 	 * {@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}
 	 * and invoke the one that supports it.
@@ -112,25 +118,32 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	@Nullable
 	public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
-
+		// 获得 HandlerMethodArgumentResolver 对象
 		HandlerMethodArgumentResolver resolver = getArgumentResolver(parameter);
+		// 如果获得不到，抛出 IllegalArgumentException 异常
 		if (resolver == null) {
 			throw new IllegalArgumentException("Unsupported parameter type [" +
 					parameter.getParameterType().getName() + "]. supportsParameter should be called first.");
 		}
+		// 执行解析
 		return resolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory);
 	}
 
 	/**
+	 * 查找已注册的{@link HandlerMethodArgumentResolver} 支持
+	 * 给定的方法参数。
 	 * Find a registered {@link HandlerMethodArgumentResolver} that supports
 	 * the given method parameter.
 	 */
 	@Nullable
 	private HandlerMethodArgumentResolver getArgumentResolver(MethodParameter parameter) {
+		// 优先从 argumentResolverCache 缓存中，获得 parameter 对应的 HandlerMethodArgumentResolver 对象
 		HandlerMethodArgumentResolver result = this.argumentResolverCache.get(parameter);
 		if (result == null) {
 			for (HandlerMethodArgumentResolver resolver : this.argumentResolvers) {
+				// 获得不到，则遍历 argumentResolvers 数组，逐个判断是否支持。
 				if (resolver.supportsParameter(parameter)) {
+					// 如果支持，则添加到 argumentResolverCache 缓存中，并返回
 					result = resolver;
 					this.argumentResolverCache.put(parameter, result);
 					break;

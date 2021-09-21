@@ -115,11 +115,12 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 
 	@Override
 	public boolean supportsReturnType(MethodParameter returnType) {
+		//类上面或者对应的方法上是否存在ResponseBody
 		return (AnnotatedElementUtils.hasAnnotation(returnType.getContainingClass(), ResponseBody.class) ||
 				returnType.hasMethodAnnotation(ResponseBody.class));
 	}
 
-	/**
+	/** 解析@RequestBody注解参数到指定的参数对象
 	 * Throws MethodArgumentNotValidException if validation fails.
 	 * @throws HttpMessageNotReadableException if {@link RequestBody#required()}
 	 * is {@code true} and there is no body content or if there is no suitable
@@ -130,6 +131,7 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
 
 		parameter = parameter.nestedIfOptional();
+		//通过messageConveter将字符串参数转化成请求对象
 		Object arg = readWithMessageConverters(webRequest, parameter, parameter.getNestedGenericParameterType());
 		String name = Conventions.getVariableNameForParameter(parameter);
 
@@ -174,12 +176,15 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
 			ModelAndViewContainer mavContainer, NativeWebRequest webRequest)
 			throws IOException, HttpMediaTypeNotAcceptableException, HttpMessageNotWritableException {
-
+       // <1> 设置请求已处理
 		mavContainer.setRequestHandled(true);
+		// <2> 创建请求和响应
 		ServletServerHttpRequest inputMessage = createInputMessage(webRequest);
 		ServletServerHttpResponse outputMessage = createOutputMessage(webRequest);
 
 		// Try even with null return value. ResponseBodyAdvice could get involved.
+		// <3> 使用 HttpMessageConverter 对对象进行转换，并写入到响应
+		//即使使用 null 返回值也可以尝试。 ResponseBodyAdvice 可能会参与其中。
 		writeWithMessageConverters(returnValue, returnType, inputMessage, outputMessage);
 	}
 

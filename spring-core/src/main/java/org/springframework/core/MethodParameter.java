@@ -476,7 +476,7 @@ public class MethodParameter {
 		this.parameterType = parameterType;
 	}
 
-	/**
+	/** 返回方法/构造函数参数的类型。
 	 * Return the type of the method/constructor parameter.
 	 * @return the parameter type (never {@code null})
 	 */
@@ -542,7 +542,7 @@ public class MethodParameter {
 		return this.executable.getParameterTypes()[this.parameterIndex];
 	}
 
-	/**
+	/** 返回方法/构造函数参数的嵌套类型。
 	 * Return the nested type of the method/constructor parameter.
 	 * @return the parameter type (never {@code null})
 	 * @since 3.1

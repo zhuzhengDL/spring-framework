@@ -71,9 +71,10 @@ public class RequestParamMapMethodArgumentResolver implements HandlerMethodArgum
 	@Override
 	public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
-
+		// 获得请求的参数集合
 		ResolvableType resolvableType = ResolvableType.forMethodParameter(parameter);
 
+		// MultiValueMap 类型的处理
 		if (MultiValueMap.class.isAssignableFrom(parameter.getParameterType())) {
 			// MultiValueMap
 			Class<?> valueType = resolvableType.as(MultiValueMap.class).getGeneric(1).resolve();
@@ -104,7 +105,7 @@ public class RequestParamMapMethodArgumentResolver implements HandlerMethodArgum
 				return result;
 			}
 		}
-
+		// 普通 Map 类型的处理
 		else {
 			// Regular Map
 			Class<?> valueType = resolvableType.asMap().getGeneric(1).resolve();

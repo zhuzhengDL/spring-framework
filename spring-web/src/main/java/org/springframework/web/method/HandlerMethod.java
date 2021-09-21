@@ -243,6 +243,9 @@ public class HandlerMethod {
 		return result;
 	}
 
+	/**
+	 * 解析方法上面的ResponseStatus注解
+	 */
 	private void evaluateResponseStatus() {
 		ResponseStatus annotation = getMethodAnnotation(ResponseStatus.class);
 		if (annotation == null) {
@@ -294,7 +297,7 @@ public class HandlerMethod {
 		return this.bridgedMethod;
 	}
 
-	/**
+	/** 返回此处理程序方法的方法参数。
 	 * Return the method parameters for this handler method.
 	 */
 	public MethodParameter[] getMethodParameters() {

@@ -91,6 +91,11 @@ public interface PathMatcher {
 	String extractPathWithinPattern(String pattern, String path);
 
 	/**
+	 * 给定模式和完整路径，提取 URI 模板变量。 URI模板
+	 * * 变量通过大括号（'{' 和'}'）表示。
+	 * * <p>例如：对于模式“/hotels/{hotel}”和路径“/hotels/1”，此方法将
+	 * * 返回包含“酒店”->“1”的Map。
+	 *
 	 * Given a pattern and a full path, extract the URI template variables. URI template
 	 * variables are expressed through curly brackets ('{' and '}').
 	 * <p>For example: For pattern "/hotels/{hotel}" and path "/hotels/1", this method will

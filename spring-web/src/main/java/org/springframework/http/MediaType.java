@@ -549,7 +549,8 @@ public class MediaType extends MimeType implements Serializable {
 		return super.includes(other);
 	}
 
-	/**
+	/** 指示此 {@code MediaType} 是否与给定的媒体类型兼容。比如 text/* 兼容  text/plain
+	 *
 	 * Indicate whether this {@code MediaType} is compatible with the given media type.
 	 * <p>For instance, {@code text/*} is compatible with {@code text/plain},
 	 * {@code text/html}, and vice versa. In effect, this method is similar to
