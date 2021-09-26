@@ -114,6 +114,7 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 
 
 	public ExceptionHandlerExceptionResolver() {
+		// 初始化 messageConverters
 		this.messageConverters = new ArrayList<>();
 		this.messageConverters.add(new ByteArrayHttpMessageConverter());
 		this.messageConverters.add(new StringHttpMessageConverter());
@@ -265,12 +266,14 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 	@Override
 	public void afterPropertiesSet() {
 		// Do this first, it may add ResponseBodyAdvice beans
-		initExceptionHandlerAdviceCache();
 
+		// 初始化 exceptionHandlerAdviceCache、responseBodyAdvice
+		initExceptionHandlerAdviceCache();
+		// 初始化 argumentResolvers 参数
 		if (this.argumentResolvers == null) {
 			List<HandlerMethodArgumentResolver> resolvers = getDefaultArgumentResolvers();
 			this.argumentResolvers = new HandlerMethodArgumentResolverComposite().addResolvers(resolvers);
-		}
+		}  // 初始化 returnValueHandlers 参数
 		if (this.returnValueHandlers == null) {
 			List<HandlerMethodReturnValueHandler> handlers = getDefaultReturnValueHandlers();
 			this.returnValueHandlers = new HandlerMethodReturnValueHandlerComposite().addHandlers(handlers);
@@ -281,22 +284,26 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 		if (getApplicationContext() == null) {
 			return;
 		}
-
+      // <1> 扫描 @ControllerAdvice 注解的 Bean 们，并将进行排序
 		List<ControllerAdviceBean> adviceBeans = ControllerAdviceBean.findAnnotatedBeans(getApplicationContext());
+		// <2> 遍历 ControllerAdviceBean 数组
 		for (ControllerAdviceBean adviceBean : adviceBeans) {
 			Class<?> beanType = adviceBean.getBeanType();
 			if (beanType == null) {
 				throw new IllegalStateException("Unresolvable type for ControllerAdviceBean: " + adviceBean);
 			}
+			// <2.1> 扫描该 ControllerAdviceBean 对应的类型
 			ExceptionHandlerMethodResolver resolver = new ExceptionHandlerMethodResolver(beanType);
+			// <2.2> 有 @ExceptionHandler 注解，则添加到 exceptionHandlerAdviceCache 中
 			if (resolver.hasExceptionMappings()) {
 				this.exceptionHandlerAdviceCache.put(adviceBean, resolver);
 			}
+			// <2.3> 如果该 beanType 类型是 ResponseBodyAdvice 子类，则添加到 responseBodyAdvice 中
 			if (ResponseBodyAdvice.class.isAssignableFrom(beanType)) {
 				this.responseBodyAdvice.add(adviceBean);
 			}
 		}
-
+		// 打印日志
 		if (logger.isDebugEnabled()) {
 			int handlerSize = this.exceptionHandlerAdviceCache.size();
 			int adviceSize = this.responseBodyAdvice.size();
@@ -387,27 +394,29 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 		return !this.exceptionHandlerAdviceCache.isEmpty();
 	}
 
-	/**
+	/** 找到一个 {@code @ExceptionHandler} 方法并调用它来处理引发的异常。
+	 *
 	 * Find an {@code @ExceptionHandler} method and invoke it to handle the raised exception.
 	 */
 	@Override
 	@Nullable
 	protected ModelAndView doResolveHandlerMethodException(HttpServletRequest request,
 			HttpServletResponse response, @Nullable HandlerMethod handlerMethod, Exception exception) {
-
+		// <1> 获得异常对应的 ServletInvocableHandlerMethod 对象
 		ServletInvocableHandlerMethod exceptionHandlerMethod = getExceptionHandlerMethod(handlerMethod, exception);
 		if (exceptionHandlerMethod == null) {
 			return null;
 		}
-
+		// <1.1> 设置 ServletInvocableHandlerMethod 对象的相关属性
 		if (this.argumentResolvers != null) {
 			exceptionHandlerMethod.setHandlerMethodArgumentResolvers(this.argumentResolvers);
 		}
 		if (this.returnValueHandlers != null) {
 			exceptionHandlerMethod.setHandlerMethodReturnValueHandlers(this.returnValueHandlers);
 		}
-
+		// <1.2> 创建 ServletWebRequest 对象
 		ServletWebRequest webRequest = new ServletWebRequest(request, response);
+		// <1.3> 创建 ModelAndViewContainer 对象
 		ModelAndViewContainer mavContainer = new ModelAndViewContainer();
 
 		ArrayList<Throwable> exceptions = new ArrayList<>();
@@ -425,9 +434,11 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 			Object[] arguments = new Object[exceptions.size() + 1];
 			exceptions.toArray(arguments);  // efficient arraycopy call in ArrayList
 			arguments[arguments.length - 1] = handlerMethod;
+			// <2> 执行 ServletInvocableHandlerMethod 的调用
 			exceptionHandlerMethod.invokeAndHandle(webRequest, mavContainer, arguments);
 		}
 		catch (Throwable invocationEx) {
+			// <2.1> 发生异常，则直接返回
 			// Any other than the original exception (or a cause) is unintended here,
 			// probably an accident (e.g. failed assertion or the like).
 			if (!exceptions.contains(invocationEx) && logger.isWarnEnabled()) {
@@ -436,13 +447,14 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 			// Continue with default processing of the original exception...
 			return null;
 		}
-
+		// <3.1> 如果 mavContainer 已处理，则返回“空”的 ModelAndView 对象。
 		if (mavContainer.isRequestHandled()) {
 			return new ModelAndView();
 		}
 		else {
 			ModelMap model = mavContainer.getModel();
 			HttpStatus status = mavContainer.getStatus();
+			// <3.2.1> 创建 ModelAndView 对象，并设置相关属性
 			ModelAndView mav = new ModelAndView(mavContainer.getViewName(), model, status);
 			mav.setViewName(mavContainer.getViewName());
 			if (!mavContainer.isViewReference()) {
@@ -469,34 +481,43 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 	@Nullable
 	protected ServletInvocableHandlerMethod getExceptionHandlerMethod(
 			@Nullable HandlerMethod handlerMethod, Exception exception) {
-
+        // 处理器的类型
 		Class<?> handlerType = null;
-
+		// <1> 首先，如果 handlerMethod 非空，则先获得 Controller 对应的 @ExceptionHandler 处理器对应的方法
 		if (handlerMethod != null) {
 			// Local exception handler methods on the controller class itself.
 			// To be invoked through the proxy, even in case of an interface-based proxy.
+			// 获得 handlerType
 			handlerType = handlerMethod.getBeanType();
+			// 获得 handlerType 对应的 ExceptionHandlerMethodResolver 对象
 			ExceptionHandlerMethodResolver resolver = this.exceptionHandlerCache.get(handlerType);
 			if (resolver == null) {
 				resolver = new ExceptionHandlerMethodResolver(handlerType);
 				this.exceptionHandlerCache.put(handlerType, resolver);
 			}
+			// 获得异常对应的 Method 方法
 			Method method = resolver.resolveMethod(exception);
 			if (method != null) {
+				// 如果获得到 Method 方法，则创建 ServletInvocableHandlerMethod 对象，并返回
 				return new ServletInvocableHandlerMethod(handlerMethod.getBean(), method);
 			}
 			// For advice applicability check below (involving base packages, assignable types
 			// and annotation presence), use target class instead of interface-based proxy.
 			if (Proxy.isProxyClass(handlerType)) {
+				// 获得 handlerType 的原始类。因为，此处有可能是代理对象
 				handlerType = AopUtils.getTargetClass(handlerMethod.getBean());
 			}
 		}
-
+		// <2> 其次，使用 ControllerAdvice 对应的 @ExceptionHandler 处理器对应的方法
 		for (Map.Entry<ControllerAdviceBean, ExceptionHandlerMethodResolver> entry : this.exceptionHandlerAdviceCache.entrySet()) {
 			ControllerAdviceBean advice = entry.getKey();
+			// 如果 ControllerAdvice 支持当前的 handlerType
 			if (advice.isApplicableToBeanType(handlerType)) {
+				// 获得 handlerType 对应的 ExceptionHandlerMethodResolver 对象
 				ExceptionHandlerMethodResolver resolver = entry.getValue();
+				// 获得异常对应的 Method 方法
 				Method method = resolver.resolveMethod(exception);
+				// 如果获得到 Method 方法，则创建 ServletInvocableHandlerMethod 对象，并返回
 				if (method != null) {
 					return new ServletInvocableHandlerMethod(advice.resolveBean(), method);
 				}

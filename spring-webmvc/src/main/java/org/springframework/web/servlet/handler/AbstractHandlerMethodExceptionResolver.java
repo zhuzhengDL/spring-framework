@@ -41,22 +41,25 @@ public abstract class AbstractHandlerMethodExceptionResolver extends AbstractHan
 	@Override
 	protected boolean shouldApplyTo(HttpServletRequest request, @Nullable Object handler) {
 		if (handler == null) {
+			// 情况一，如果 handler 为空，则直接调用父方法
 			return super.shouldApplyTo(request, null);
 		}
 		else if (handler instanceof HandlerMethod) {
+			// 情况二，处理 handler 为 HandlerMethod 类型的情况
 			HandlerMethod handlerMethod = (HandlerMethod) handler;
 			handler = handlerMethod.getBean();
 			return super.shouldApplyTo(request, handler);
 		}
+		// 情况三，存在全局异常
 		else if (hasGlobalExceptionHandlers() && hasHandlerMappings()) {
 			return super.shouldApplyTo(request, handler);
-		}
+		} // 情况四，直接返回 false
 		else {
 			return false;
 		}
 	}
 
-	/**
+	/** 是否存在global exception handlers
 	 * Whether this resolver has global exception handlers, e.g. not declared in
 	 * the same class as the {@code HandlerMethod} that raised the exception and
 	 * therefore can apply to any handler.

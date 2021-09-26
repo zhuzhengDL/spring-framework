@@ -50,17 +50,29 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 	/** Logger available to subclasses. */
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	/**
+	 * 顺序，优先级最低
+	 */
 	private int order = Ordered.LOWEST_PRECEDENCE;
 
+	/**
+	 *  匹配的处理器对象的集合
+	 */
 	@Nullable
 	private Set<?> mappedHandlers;
 
+	/**
+	 *  匹配的处理器类型的数组
+	 */
 	@Nullable
 	private Class<?>[] mappedHandlerClasses;
 
 	@Nullable
 	private Log warnLogger;
 
+	/**
+	 * 防止响应缓存
+	 */
 	private boolean preventResponseCaching = false;
 
 
@@ -135,15 +147,18 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 	@Nullable
 	public ModelAndView resolveException(
 			HttpServletRequest request, HttpServletResponse response, @Nullable Object handler, Exception ex) {
-
+		// 判断是否可以应用
 		if (shouldApplyTo(request, handler)) {
+			// 阻止响应了缓存
 			prepareResponse(ex, response);
+			// 执行解析异常，返回 ModelAndView 对象
 			ModelAndView result = doResolveException(request, response, handler, ex);
 			if (result != null) {
 				// Print debug message when warn logger is not enabled.
 				if (logger.isDebugEnabled() && (this.warnLogger == null || !this.warnLogger.isWarnEnabled())) {
 					logger.debug("Resolved [" + ex + "]" + (result.isEmpty() ? "" : " to " + result));
 				}
+				// 打印异常日志
 				// Explicitly configured warn logger in logException method.
 				logException(ex, request);
 			}
@@ -154,7 +169,8 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 		}
 	}
 
-	/**
+	/**检查这个解析器是否应该应用于给定的处理程序。
+	 *
 	 * Check whether this resolver is supposed to apply to the given handler.
 	 * <p>The default implementation checks against the configured
 	 * {@linkplain #setMappedHandlers handlers} and
@@ -169,10 +185,12 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 	 */
 	protected boolean shouldApplyTo(HttpServletRequest request, @Nullable Object handler) {
 		if (handler != null) {
+			// <1> 如果 mappedHandlers 包含 handler 对象，则返回 true
 			if (this.mappedHandlers != null && this.mappedHandlers.contains(handler)) {
 				return true;
 			}
 			if (this.mappedHandlerClasses != null) {
+				// <2> 如果 mappedHandlerClasses 包含 handler 的类型，则返回 true
 				for (Class<?> handlerClass : this.mappedHandlerClasses) {
 					if (handlerClass.isInstance(handler)) {
 						return true;
@@ -180,10 +198,11 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 				}
 			}
 		}
+		// <3> 如果 mappedHandlers 和 mappedHandlerClasses 都为空，说明直接匹配
 		return !hasHandlerMappings();
 	}
 
-	/**
+	/** 是否有任何通过以下方式注册的处理程序映射 setMappedHandlers or setMappedHandlerClasses
 	 * Whether there are any handler mappings registered via
 	 * {@link #setMappedHandlers(Set)} or {@link #setMappedHandlerClasses(Class[])}.
 	 * @since 5.3
@@ -218,7 +237,7 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 		return "Resolved [" + ex + "]";
 	}
 
-	/**
+	/** 为异常情况准备响应。
 	 * Prepare the response for the exceptional case.
 	 * <p>The default implementation prevents the response from being cached,
 	 * if the {@link #setPreventResponseCaching "preventResponseCaching"} property
@@ -233,7 +252,7 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 		}
 	}
 
-	/**
+	/** 防止响应被缓存，通过设置相应的
 	 * Prevents the response from being cached, through setting corresponding
 	 * HTTP {@code Cache-Control: no-store} header.
 	 * @param response current HTTP response

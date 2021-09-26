@@ -1026,12 +1026,17 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	@Bean
 	public HandlerExceptionResolver handlerExceptionResolver(
 			@Qualifier("mvcContentNegotiationManager") ContentNegotiationManager contentNegotiationManager) {
+		// <1> 创建 HandlerExceptionResolver 数组
 		List<HandlerExceptionResolver> exceptionResolvers = new ArrayList<>();
+		// <1.1> 添加配置的 HandlerExceptionResolver 到 exceptionResolvers 中
 		configureHandlerExceptionResolvers(exceptionResolvers);
 		if (exceptionResolvers.isEmpty()) {
+			// <1.2> 如果 exceptionResolvers 为空，添加默认 HandlerExceptionResolver 数组
 			addDefaultHandlerExceptionResolvers(exceptionResolvers, contentNegotiationManager);
 		}
+		// <1.3> 子类定义的 HandlerExceptionResolver 数组，到 exceptionResolvers 中
 		extendHandlerExceptionResolvers(exceptionResolvers);
+		// <2> 创建 HandlerExceptionResolverComposite 数组
 		HandlerExceptionResolverComposite composite = new HandlerExceptionResolverComposite();
 		composite.setOrder(0);
 		composite.setExceptionResolvers(exceptionResolvers);
@@ -1060,7 +1065,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	protected void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
 	}
 
-	/**
+	/**添加默认的异常解析处理器（DefaultHandlerExceptionResolver、ResponseStatusExceptionResolver、ExceptionHandlerExceptionResolver
+	 *
 	 * A method available to subclasses for adding default
 	 * {@link HandlerExceptionResolver HandlerExceptionResolvers}.
 	 * <p>Adds the following exception resolvers:
@@ -1074,7 +1080,7 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	 */
 	protected final void addDefaultHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers,
 			ContentNegotiationManager mvcContentNegotiationManager) {
-
+         // 创建 ExceptionHandlerExceptionResolver 对象
 		ExceptionHandlerExceptionResolver exceptionHandlerResolver = createExceptionHandlerExceptionResolver();
 		exceptionHandlerResolver.setContentNegotiationManager(mvcContentNegotiationManager);
 		exceptionHandlerResolver.setMessageConverters(getMessageConverters());
@@ -1089,11 +1095,11 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 		}
 		exceptionHandlerResolver.afterPropertiesSet();
 		exceptionResolvers.add(exceptionHandlerResolver);
-
+        //创建ResponseStatusExceptionResolver
 		ResponseStatusExceptionResolver responseStatusResolver = new ResponseStatusExceptionResolver();
 		responseStatusResolver.setMessageSource(this.applicationContext);
 		exceptionResolvers.add(responseStatusResolver);
-
+		///创建DefaultHandlerExceptionResolver
 		exceptionResolvers.add(new DefaultHandlerExceptionResolver());
 	}
 
