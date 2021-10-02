@@ -28,7 +28,8 @@ import org.springframework.web.servlet.ThemeResolver;
  */
 public abstract class AbstractThemeResolver implements ThemeResolver {
 
-	/**
+	/** 默认主题名称的开箱即用值：“theme”。
+	 *
 	 * Out-of-the-box value for the default theme name: "theme".
 	 */
 	public static final String ORIGINAL_DEFAULT_THEME_NAME = "theme";
@@ -36,7 +37,7 @@ public abstract class AbstractThemeResolver implements ThemeResolver {
 	private String defaultThemeName = ORIGINAL_DEFAULT_THEME_NAME;
 
 
-	/**
+	/** 设置默认主题的名称。开箱即用的值是“主题”。
 	 * Set the name of the default theme.
 	 * Out-of-the-box value is "theme".
 	 */
@@ -44,7 +45,7 @@ public abstract class AbstractThemeResolver implements ThemeResolver {
 		this.defaultThemeName = defaultThemeName;
 	}
 
-	/**
+	/** 返回默认主题的名称。
 	 * Return the name of the default theme.
 	 */
 	public String getDefaultThemeName() {

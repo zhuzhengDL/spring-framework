@@ -70,14 +70,14 @@ public class CookieThemeResolver extends CookieGenerator implements ThemeResolve
 	}
 
 
-	/**
+	/** 设置默认主题的名称。
 	 * Set the name of the default theme.
 	 */
 	public void setDefaultThemeName(String defaultThemeName) {
 		this.defaultThemeName = defaultThemeName;
 	}
 
-	/**
+	/** 返回默认主题的名称。
 	 * Return the name of the default theme.
 	 */
 	public String getDefaultThemeName() {

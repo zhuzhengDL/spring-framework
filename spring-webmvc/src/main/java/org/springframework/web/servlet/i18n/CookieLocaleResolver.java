@@ -338,6 +338,7 @@ public class CookieLocaleResolver extends CookieGenerator implements LocaleConte
 	protected Locale determineDefaultLocale(HttpServletRequest request) {
 		Locale defaultLocale = getDefaultLocale();
 		if (defaultLocale == null) {
+			//默认的Locale不存在 从请求的Accept-Language header取
 			defaultLocale = request.getLocale();
 		}
 		return defaultLocale;

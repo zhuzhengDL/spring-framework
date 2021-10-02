@@ -25,6 +25,9 @@ import org.springframework.context.i18n.LocaleContext;
 import org.springframework.lang.Nullable;
 
 /**
+ * {@link LocaleResolver} 的扩展，增加了对丰富语言环境的支持
+ *   （可能包括区域设置和时区信息）。
+ *
  * Extension of {@link LocaleResolver}, adding support for a rich locale context
  * (potentially including locale and time zone information).
  *
@@ -38,7 +41,8 @@ import org.springframework.lang.Nullable;
  */
 public interface LocaleContextResolver extends LocaleResolver {
 
-	/**
+	/** 通过给定的请求解析当前的语言环境上下文。
+	 *
 	 * Resolve the current locale context via the given request.
 	 * <p>This is primarily intended for framework-level processing; consider using
 	 * {@link org.springframework.web.servlet.support.RequestContextUtils} or
@@ -58,7 +62,7 @@ public interface LocaleContextResolver extends LocaleResolver {
 	 */
 	LocaleContext resolveLocaleContext(HttpServletRequest request);
 
-	/**
+	/** 将当前区域设置上下文设置为给定的上下文，可能包括具有关联时区信息的区域设置。
 	 * Set the current locale context to the given one,
 	 * potentially including a locale with associated time zone information.
 	 * @param request the request to be used for locale modification

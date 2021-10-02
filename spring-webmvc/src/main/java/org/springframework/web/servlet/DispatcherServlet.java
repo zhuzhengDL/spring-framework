@@ -547,7 +547,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 	}
 
-	/**
+	/** 初始化此类使用的 LocaleResolver。
 	 * Initialize the LocaleResolver used by this class.
 	 * <p>If no bean is defined with the given name in the BeanFactory for this namespace,
 	 * we default to AcceptHeaderLocaleResolver.
@@ -572,7 +572,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 	}
 
-	/**
+	/** 初始化 ThemeResolver
 	 * Initialize the ThemeResolver used by this class.
 	 * <p>If no bean is defined with the given name in the BeanFactory for this namespace,
 	 * we default to a FixedThemeResolver.
@@ -757,14 +757,17 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 	}
 
-	/**
+	/** 初始化 ViewResolvers
+	 *
 	 * Initialize the ViewResolvers used by this class.
 	 * <p>If no ViewResolver beans are defined in the BeanFactory for this
 	 * namespace, we default to InternalResourceViewResolver.
 	 */
 	private void initViewResolvers(ApplicationContext context) {
-		this.viewResolvers = null;
 
+		// 置空 viewResolvers 处理
+		this.viewResolvers = null;
+		// 情况一，自动扫描 ViewResolver 类型的 Bean 们
 		if (this.detectAllViewResolvers) {
 			// Find all ViewResolvers in the ApplicationContext, including ancestor contexts.
 			Map<String, ViewResolver> matchingBeans =
@@ -776,6 +779,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 		else {
+			// 情况二，获得名字为 VIEW_RESOLVER_BEAN_NAME(viewResolver) 的 Bean 们
 			try {
 				ViewResolver vr = context.getBean(VIEW_RESOLVER_BEAN_NAME, ViewResolver.class);
 				this.viewResolvers = Collections.singletonList(vr);
@@ -788,6 +792,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		// Ensure we have at least one ViewResolver, by registering
 		// a default ViewResolver if no other resolvers are found.
 		if (this.viewResolvers == null) {
+			// 情况三，如果未获得到，则获得默认配置的 ViewResolver 类(InternalResourceViewResolver.java)
 			this.viewResolvers = getDefaultStrategies(context, ViewResolver.class);
 			if (logger.isTraceEnabled()) {
 				logger.trace("No ViewResolvers declared for servlet '" + getServletName() +
