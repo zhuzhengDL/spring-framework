@@ -131,15 +131,17 @@ public abstract class AbstractMultipartHttpServletRequest extends HttpServletReq
 				new LinkedMultiValueMap<>(Collections.unmodifiableMap(multipartFiles));
 	}
 
-	/**
+	/** 获取用于检索的 MultipartFile Map，必要时对其进行延迟初始化。
 	 * Obtain the MultipartFile Map for retrieval,
 	 * lazily initializing it if necessary.
 	 * @see #initializeMultipart()
 	 */
 	protected MultiValueMap<String, MultipartFile> getMultipartFiles() {
+		// 如果未初始化，则进行初始化
 		if (this.multipartFiles == null) {
 			initializeMultipart();
 		}
+		//返回
 		return this.multipartFiles;
 	}
 

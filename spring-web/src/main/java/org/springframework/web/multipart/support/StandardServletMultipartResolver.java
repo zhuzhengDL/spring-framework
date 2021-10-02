@@ -60,10 +60,14 @@ import org.springframework.web.multipart.MultipartResolver;
  */
 public class StandardServletMultipartResolver implements MultipartResolver {
 
+	/**
+	 * 是否延迟解析
+	 */
 	private boolean resolveLazily = false;
 
 
-	/**
+	/** 设置是否在文件或参数访问时延迟解析多部分请求。
+	 *
 	 * Set whether to resolve the multipart request lazily at the time of
 	 * file or parameter access.
 	 * <p>Default is "false", resolving the multipart elements immediately, throwing
@@ -96,6 +100,7 @@ public class StandardServletMultipartResolver implements MultipartResolver {
 			try {
 				for (Part part : request.getParts()) {
 					if (request.getFile(part.getName()) != null) {
+						// 删除临时的 Part 们
 						part.delete();
 					}
 				}
