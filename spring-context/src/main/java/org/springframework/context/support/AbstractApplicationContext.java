@@ -582,27 +582,31 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			// Tell the subclass to refresh the internal bean factory.
 			// 这步比较关键，这步完成后，配置文件就会解析成一个个 Bean 定义，注册到 BeanFactory 中，
 			// 当然，这里说的 Bean 还没有初始化，只是配置信息都提取出来了，
-			// 注册也只是将这些信息都保存到了注册中心(说到底核心是一个 beanName-> beanDefinition 的 map)
+			// 注册也只是将这些信息都保存到了注册中心BeanDefinitionRegist (说到底核心是一个 beanName-> beanDefinition 的 map)
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
-            //// 填充BeanFactory功能
+
+            ////BeanFactory准备工作： 填充BeanFactory功能，设置类加载器，提前设置一些监听器。
 			// Prepare the bean factory for use in this context. 准备在此上下文中使用的 bean 工厂。
 			prepareBeanFactory(beanFactory);
 
 			try {
+				//BeanFactory准备工作完成后，进行BeanFactory后置处理，供拓展使用
 				// 提供子类覆盖的额外处理，即子类处理自定义的BeanFactoryPostProcess
 				// Allows post-processing of the bean factory in context subclasses. 允许在上下文子类中对 bean 工厂进行后处理。
 				postProcessBeanFactory(beanFactory);
 
 				StartupStep beanPostProcess = this.applicationStartup.start("spring.context.beans.post-process");
-				// // 激活各种BeanFactory处理器
+				// // 激活各种BeanFactory处理器，调用在上下文中注册为 bean 的工厂处理器。
 				// Invoke factory processors registered as beans in the context. 调用在上下文中注册为 bean 的工厂处理器。
 				invokeBeanFactoryPostProcessors(beanFactory);
+
                 //注册拦截Bean创建的Bean处理器，即注册 BeanPostProcessor
 				// Register bean processors that intercept bean creation. 注册拦截 bean 创建的 bean 处理器。
 				// 注册 BeanPostProcessor 的实现类，注意看和 BeanFactoryPostProcessor 的区别
 				// 此接口两个方法: postProcessBeforeInitialization 和 postProcessAfterInitialization
 				// 两个方法分别在 Bean 初始化之前和初始化之后得到执行。注意，到这里 Bean 还没初始化
 				registerBeanPostProcessors(beanFactory);
+
 				beanPostProcess.end();
                 // 初始化上下文中的资源文件，如国际化文件的处理等
 				// Initialize message source for this context. 初始化此上下文的消息源。
@@ -613,14 +617,16 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// 给子类扩展初始化其他Bean
 				// Initialize other special beans in specific context subclasses.
 				onRefresh();
-                // 在所有bean中查找listener bean，然后注册到广播器中
+                // 注册应用的监听器，就是注册实现了ApplicationListener接口的所有bean
+				// 在所有bean中查找listener bean，然后注册到广播器中
 				// Check for listener beans and register them. 检查侦听器 bean 并注册它们。
 				registerListeners();
+				// 重点，重点，重点
                // 初始化剩下的单例Bean(非延迟加载的)
 				// Instantiate all remaining (non-lazy-init) singletons. 实例化所有剩余的（非延迟初始化）单例。
-				// 重点，重点，重点
-				// 初始化所有的 singleton beans
-				//（lazy-init 的除外）
+			    //填充属性
+				//初始化方法调用（比如afterPropertiesset或者init-methad）
+				//调用BeanPostProcesser后置处理器对bean进行处理
 				finishBeanFactoryInitialization(beanFactory);
 				// 完成刷新过程,通知生命周期处理器lifecycleProcessor刷新过程,同时发出ContextRefreshEvent通知别人
 				// Last step: publish corresponding event. 最后一步：发布相应的事件。

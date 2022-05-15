@@ -263,11 +263,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			throws BeansException {
 		// <1> 返回 bean 名称，剥离工厂引用前缀。
 		// 如果 name 是 alias ，则获取对应映射的 beanName 。
+		//解析beanName 如果是$符号开头则去掉$符号,如果是别名则获取真正的beanName返回
 		String beanName = transformedBeanName(name);
 		Object beanInstance;
 
 		// Eagerly check singleton cache for manually registered singletons.
-		// 从缓存中或者实例工厂中获取 Bean 对象
+		// 单纯的认为从缓存中或者实例工厂中获取 Bean 对象
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
 			if (logger.isTraceEnabled()) {

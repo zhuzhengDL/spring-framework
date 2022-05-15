@@ -589,6 +589,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
 		}
 		// <2> 使用合适的实例化策略来创建新的实例：工厂方法、构造函数自动注入、简单初始化
+		//创建Bean实例对象，仅仅通过构造函数实例化，还没设置属性
 		if (instanceWrapper == null) {
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
@@ -631,7 +632,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				logger.trace("Eagerly caching bean '" + beanName +
 						"' to allow for resolving potential circular references");
 			}
-			// 提前将创建的 bean 实例加入到 singletonFactories 中
+			// 提前将创建的 bean 实例(没有设置属性的半成品)加入到 singletonFactories 中
 			// 这里是为了后期避免循环依赖
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 		}
@@ -640,10 +641,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// 开始初始化 bean 实例对象
 		Object exposedObject = bean;
 		try {
-			// <5> 对 bean 进行填充，将各个属性值注入，其中，可能存在依赖于其他 bean 的属性
+			// <5> 对 bean 进行属性填充，将各个属性值注入，其中，可能存在依赖于其他 bean 的属性
 			// 则会递归初始依赖 bean
 			populateBean(beanName, mbd, instanceWrapper);
-			// <6> 调用初始化方法
+			// <6> 调用初始化方法 执行BeanPostProcesser后置处理器实现的方法
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
 		catch (Throwable ex) {

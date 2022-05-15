@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+group 'org.springframework'
+version '5.3.9-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile(project(":spring-context"))
+    compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.6'
+    testFixturesApi("org.junit.jupiter:junit-jupiter-api")
+    testFixturesApi("org.junit.jupiter:junit-jupiter-params")
+}
