@@ -2,6 +2,7 @@ import com.lagou.edu.LagouBean;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -38,6 +39,7 @@ public class IocTest {
 	@Test
 	public void testAOP() {
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
+//		AnnotationConfigApplicationContext()
 		LagouBean lagouBean = applicationContext.getBean(LagouBean.class);
 		lagouBean.print();
 	}

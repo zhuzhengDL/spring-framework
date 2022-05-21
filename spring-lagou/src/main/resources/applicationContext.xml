@@ -28,14 +28,14 @@
 
 	<!--aop配置-->
 	<!--横切逻辑-->
-	<!--<bean id="logUtils" class="com.lagou.edu.LogUtils">
+	<bean id="logUtils" class="com.lagou.edu.LogUtils">
 	</bean>
 
 	<aop:config>
 		<aop:aspect ref="logUtils">
 			<aop:before method="beforeMethod" pointcut="execution(public void com.lagou.edu.LagouBean.print())"/>
 		</aop:aspect>
-	</aop:config>-->
+	</aop:config>
 
 
 </beans>

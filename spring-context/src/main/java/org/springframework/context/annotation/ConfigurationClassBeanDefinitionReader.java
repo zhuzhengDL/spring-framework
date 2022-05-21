@@ -131,6 +131,8 @@ class ConfigurationClassBeanDefinitionReader {
 	}
 
 	/**
+	 * 读取特定的 {@link ConfigurationClass}，注册 bean 定义
+
 	 * Read a particular {@link ConfigurationClass}, registering bean definitions
 	 * for the class itself and all of its {@link Bean} methods.
 	 */
@@ -147,17 +149,25 @@ class ConfigurationClassBeanDefinitionReader {
 		}
 
 		if (configClass.isImported()) {
+			//配置类自身注册到BeanDefinitionRegisty
 			registerBeanDefinitionForImportedConfigurationClass(configClass);
 		}
 		for (BeanMethod beanMethod : configClass.getBeanMethods()) {
+			//解析之前所有的@Bean注解的BeanMethods方法 转化成ConfigurationClassBeanDefinition 注册到容器
+			//通过beanDef.setFactoryBeanName(configClass.getBeanName());beanDef.setUniqueFactoryMethodName(methodName);
+			//通过工厂FactoryBean 来生成@Bean注册的bean
 			loadBeanDefinitionsForBeanMethod(beanMethod);
 		}
-
+        //解析之前加载的@ImportedResources  Bean定义注册到容器
 		loadBeanDefinitionsFromImportedResources(configClass.getImportedResources());
+		//执行之前保存的实现了ImportBeanDefinitionRegistrar接口的registrar.registerBeanDefinitions方法  注册对应要注册的Bean的定义到容器
+		/**
+		 * @see AspectJAutoProxyRegistrar
+		 */
 		loadBeanDefinitionsFromRegistrars(configClass.getImportBeanDefinitionRegistrars());
 	}
 
-	/**
+	/** 将 {@link Configuration} 类本身注册为 bean 定义。
 	 * Register the {@link Configuration} class itself as a bean definition.
 	 */
 	private void registerBeanDefinitionForImportedConfigurationClass(ConfigurationClass configClass) {

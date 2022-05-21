@@ -3,11 +3,13 @@ package com.lagou.edu;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @Author 应癫
  * @create 2019/12/3 16:59
  */
+@EnableTransactionManagement
 public class MyBeanPostProcessor implements BeanPostProcessor {
 
 	public MyBeanPostProcessor() {

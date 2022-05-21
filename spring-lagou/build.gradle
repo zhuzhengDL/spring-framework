@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     compile(project(":spring-context"))
+    compile(project(":spring-tx"))
     compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.6'
     testFixturesApi("org.junit.jupiter:junit-jupiter-api")
     testFixturesApi("org.junit.jupiter:junit-jupiter-params")

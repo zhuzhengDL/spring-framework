@@ -228,7 +228,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		this.applicationStartup = applicationStartup;
 	}
 
-	/**
+	/** 从配置类中解析bean定义
 	 * Derive further bean definitions from the configuration classes in the registry.
 	 */
 	@Override
@@ -246,8 +246,9 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 		processConfigBeanDefinitions(registry);
 	}
-
-	/**
+/**
+ * 为运行时服务 bean 请求准备配置类
+ * 通过将它们替换为 CGLIB 增强的子类。
 	 * Prepare the Configuration classes for servicing bean requests at runtime
 	 * by replacing them with CGLIB-enhanced subclasses.
 	 */
@@ -269,7 +270,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		beanFactory.addBeanPostProcessor(new ImportAwareBeanPostProcessor(beanFactory));
 	}
 
-	/**
+	/**  //扫描包路径下的注解和引入(import)的bena定义  注册到容器
 	 * Build and validate a configuration model based on the registry of
 	 * {@link Configuration} classes.
 	 */
@@ -319,6 +320,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			this.environment = new StandardEnvironment();
 		}
 
+		//解析每一个配置类  例如@SpringBootApplicaton的了
 		// Parse each @Configuration class
 		ConfigurationClassParser parser = new ConfigurationClassParser(
 				this.metadataReaderFactory, this.problemReporter, this.environment,
@@ -328,6 +330,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
 			StartupStep processConfig = this.applicationStartup.start("spring.context.config-classes.parse");
+			//解析每一个配置类，扫描出来的直接加入容器bean定义map
 			parser.parse(candidates);
 			parser.validate();
 
@@ -340,6 +343,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 						registry, this.sourceExtractor, this.resourceLoader, this.environment,
 						this.importBeanNameGenerator, parser.getImportRegistry());
 			}
+			//加载之前引入的@ImportBeanDefinitionRegistrar  @Bean  @ImportSource bean定义到容器（）
 			this.reader.loadBeanDefinitions(configClasses);
 			alreadyParsed.addAll(configClasses);
 			processConfig.tag("classCount", () -> String.valueOf(configClasses.size())).end();
